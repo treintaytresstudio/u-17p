@@ -6,7 +6,7 @@
     $post_open = 1;
 
     //ID del post
-    $post_id = $_GET['id'];
+    $hashtag_name = $_GET['hashtag_name'];
 
     if($getFromU->loggedIn() === true){
         include BASE_URL.'/includes/header.php';
@@ -22,11 +22,12 @@
 		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts">
 			<?php
 				//Llamamos los posts del usuario 
-				$getFromP->post($post_id,$user_id,$post_open); 
+                $getFromH->postsHashtag($hashtag_name);
 			?>
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"></div>
 	</div>
 </div>
 
-<?php include 'includes/footer.php';   ?>
+
+<?php include 'includes/footer.php'; ?>

@@ -1,6 +1,38 @@
 <?php 
     include '../init.php';
 
+    //Seguir usuario
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'followUser'){
+        
+        $sender = $_POST['sender'];
+        $reciver = $_POST['reciver'];
+
+        if(isset($_POST['sender']) && !empty($_POST['sender']) && isset($_POST['reciver']) && !empty($_POST['reciver'])){
+            //Seguimos usuario
+            $follow = $getFromF->follow($sender, $reciver);
+        }else{
+            //Hubo un error
+            echo 0;
+        }    
+        
+    }
+
+    //Dejar de seguir usuario
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'unFollowUser'){
+        
+        $sender = $_POST['sender'];
+        $reciver = $_POST['reciver'];
+
+        if(isset($_POST['sender']) && !empty($_POST['sender']) && isset($_POST['reciver']) && !empty($_POST['reciver'])){
+            //Dejamos de seguir usuario
+            $follow = $getFromF->unFollow($sender, $reciver);
+        }else{
+            //Hubo un error
+            echo 0;
+        }    
+        
+    }
+
     //Post nuevo
     if(isset($_POST['operacion']) && $_POST['operacion'] === 'newPost'){
 
@@ -8,9 +40,22 @@
         $post_caption = $_POST['post_caption'];
         $post_image = $_POST['post_image'];
 
-        //Creamos post
-        $post = $getFromP->newPost($user_id, $post_caption, $post_image);
+        if(isset($_POST['post_caption']) && !empty($_POST['post_caption'])){
+            //Creamos post
+            $post = $getFromP->newPost($user_id, $post_caption, $post_image);
+        }else{
+            //El caption viene vacío y regresamos un error para que lo llenen
+            echo 0;
+        }    
         
+    }
+
+    //Borrar post
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'deletePost'){
+        //Recibimos el post
+        $post_id = $_POST['post_id'];
+        //Borramos el post
+        $post = $getFromP->deletePost($post_id);
     }
 
     //Buscar usuario
@@ -23,7 +68,7 @@
             foreach($result as $user){
                 echo '<li>'.
                 '<div class="avatar" style="background: url('.$user->profileImage.');"></div>'.
-                '<a href="'.$user->username.'">'.$user->screenName.'</a>'.
+                '<a href="profile.php?username='.$user->username.'">'.$user->screenName.'</a>'.
                 '</li>';
             }
             echo '</ul></div>';
@@ -68,6 +113,12 @@
         }
     }
 
+    //Verificar si el # del nuevo post existe o no, si no existe lo insertamos en la base de datos
+    if(isset($_POST['operacion']) && $_POST['operacion'] === "captionHashtag"){
+        $hashtag_name = $_POST['hashtag_name'];
+        $post_id = $_POST['post_id'];
+        $getFromH->captionHashtag($hashtag_name, $post_id);
+    }
 
 ?>
 

@@ -7,10 +7,12 @@
         $profileId = $getFromU->userIdByUsername($username);
 		$profileData = $getFromU->userData($profileId);
 		$profileOwner = $profileData->user_id;
+		$reciver = $profileOwner;
 		
 		//Sabemos quien está logueado
 		$user_id = $_SESSION['user_id'];
-        $user = $getFromU->userData($user_id);
+		$user = $getFromU->userData($user_id);
+		$sender = $_SESSION['user_id'];
 
 		if($getFromU->loggedIn() === true){
 			include BASE_URL.'/includes/header.php';
@@ -38,6 +40,14 @@
 					</div>
 				</div>
 
+				<div class="profile-info-item">
+					<div class="profile-numbers-user">
+						<span>Followers </span><?php $getFromF->followersCount($reciver) ?>
+						<span>Followings </span><?php $getFromF->followingsCount($reciver) ?>
+						<span>Posts </span><?php $getFromP->postCount($reciver) ?>
+					</div>
+				</div>
+
 				<?php if($user_id === $profileOwner){ ?>
 				<div class="profile-info-item profile-btn-action">
 					<a href="settings.php">
@@ -46,7 +56,7 @@
 				</div>
 				<?php }else{ ?>
 				<div class="profile-info-item profile-btn-action">
-					<button class="btn btn-primary btn-lg bg-accent">FOLLOW</button>
+					<?php $getFromF->isFollowing($sender,$reciver) ?>
 				</div>
 				<?php } ?>
 			</div>

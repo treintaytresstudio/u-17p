@@ -1,5 +1,87 @@
 //JQUERY
 $("document").ready(function(){
+    var ajaxPhp = '../u-17p/core/ajax/ajax.php';
+    var postsHome = '../u-17p/includes/posts_home.php';
+    var regex = /[#|@](\w+)$/ig
+
+    //Seguir usuario
+    $("#followBtn").on("click", function(){
+        var sender = $(this).data('sender');
+        var reciver = $(this).data('reciver');
+
+        $.ajax({
+            url:ajaxPhp,
+            type: 'POST',
+            data: {operacion: 'followUser', sender: sender, reciver: reciver},
+            beforeSend: function(){
+              //
+            },
+            complete: function(data){
+                $("#followBtn").hide();
+                $("#unFollowBtn").show();  
+            }
+          });
+
+    });
+
+    //Dejar de seguir usuario
+    $("#unFollowBtn").on("click", function(){
+        var sender = $(this).data('sender');
+        var reciver = $(this).data('reciver');
+
+        $.ajax({
+            url:ajaxPhp,
+            type: 'POST',
+            data: {operacion: 'unFollowUser', sender: sender, reciver: reciver},
+            beforeSend: function(){
+              //
+            },
+            complete: function(res){
+                $("#unFollowBtn").hide();
+                $("#followBtn").show();         
+            }
+          });
+
+    });
+
+    //Borrar post
+    $(".confirmDeletePost").on("click" ,function(){
+        var post_id = $(this).data('post-id');
+
+        $.ajax({
+            url:ajaxPhp,
+            type: 'POST',
+            data: {operacion: 'deletePost', post_id: post_id},
+            beforeSend: function(){
+              //
+            },
+            complete: function(res){
+                //Cerramos caja de confirmación
+                $(".boxConfirmDeletePost").css("display","none");
+                $(".bg-action").hide();
+                //recargamos posts
+                //$(".posts").load(location.href + " .posts>*", "");
+                location.reload();
+                
+            }
+          });
+    });
+
+
+    //Cancelar borrar post
+    $(".cancellDeletePost").on("click", function(){
+        $(".boxConfirmDeletePost").css("display","none");
+        $(".bg-action").hide();
+    });
+
+    //Abrir la confirmación para eliminar el post
+    $(".deletePost").on("click",function(){
+        var post_id = $(this).data('post-id');
+        deletePostConfirm(post_id);
+    });
+
+    //Dropdowns Bootstrap
+    $('.dropdown-toggle').dropdown()
 
     //Abrir new post
     $(".openNewPost").click(function(){
@@ -7,7 +89,7 @@ $("document").ready(function(){
     });
 
     //Cerrar new post
-    $(".new-post-close").click(function(){
+    $(".new-post-close").on("click" , function(){
         $(".new-post-wrap").css("display", "none");
     });
 
@@ -20,7 +102,7 @@ $("document").ready(function(){
             $(".menu-search-input-icon").css("color","#0085EA");
             
         }
-        $.post('../ultra/core/ajax/ajax.php', {search:search},function(data){
+        $.post(ajaxPhp, {search:search},function(data){
             $(".menu-search-result-wrap").html(data);
             $("#menu-search").css("border", "none")
         })
@@ -35,7 +117,7 @@ $("document").ready(function(){
 
         //LLamamos al archivo ajax para ejecutar la función de cambiar foto de perfil en php
         $.ajax({
-            url:'../ultra/core/ajax/ajax.php',
+            url:ajaxPhp,
             type: 'GET',
             data: {imagen: imagen, operacion: 'updateProfileImage', user_id: user_id},
             beforeSend: function(){
@@ -57,7 +139,7 @@ $("document").ready(function(){
 
         //LLamamos al archivo ajax para ejecutar la función de cambiar foto de perfil en php
         $.ajax({
-            url:'../ultra/core/ajax/ajax.php',
+            url:ajaxPhp,
             type: 'GET',
             data: {imagen: imagen, operacion: 'updateCoverImage', user_id: user_id},
             beforeSend: function(){
@@ -83,7 +165,7 @@ $("document").ready(function(){
 
         //LLamamos al archivo ajax para ejecutar la función de cambiar los datos del usuario en la sección settings
         $.ajax({
-            url:'../ultra/core/ajax/ajax.php',
+            url:ajaxPhp,
             type: 'GET',
             contentType:'application/x-www-form-urlencoded; charset=UTF-8',
             data: {user_id: user_id, operacion: 'updateSettings', screenName: screenName, username: username, bio: bio, country: country},
@@ -114,7 +196,7 @@ $("document").ready(function(){
 
         //LLamamos al archivo ajax para ejecutar la función de cambiar los datos del usuario en la sección settings
         $.ajax({
-            url:'../ultra/core/ajax/ajax.php',
+            url:ajaxPhp,
             type: 'POST',
             contentType:'application/x-www-form-urlencoded; charset=UTF-8',
             data: {user_id: user_id, operacion: 'newPost', post_caption: post_caption, post_image: post_image},
@@ -124,14 +206,90 @@ $("document").ready(function(){
             }
           })
           .done(function(data) {
-            $('#newPostBtn').val('Ready').css("background","green");
-            $('.new-post-wrap').css("display","none");
+            
+            //Verificamos que el caption no venga vacío
+            if(data == 0){
+                //Si viene vacío
+                //Mostramos al usuario un error
+                $("#newPostInput").css("border", "1px solid red");
+                $("#captionError").html("The caption cant be empty").css("color","red");
+            }else{
+                //Si no viene vacío entonces
+                //Cerramos nuevo post
+                $('.new-post-wrap').css("display","none");
+                //Formateamos el valor del input
+                $("#newPostInput").val('');
+                //Recargamos el div con el nuevo post
+                //$(".posts").load(location.href + " .posts>*", "");
+                location.reload(); 
+
+                var post_id = data;
+
+                //Llamamos a la función encargada de verificar si existen # en el caption del post
+                hashtagPost(post_caption, post_id);
+            }
           });
     });
 
+    ////////////----------Funciones----------////////////
+    function deletePostConfirm(post_id){
+        $(".bg-action").show();
+        $(".boxConfirmDeletePost").css("display","flex");
+        $(".confirmDeletePost").attr('data-post-id', post_id);
+    }
+
+    function hashtagPost(post_caption,post_id){
+        
+          //recibimos el caption del post
+          var caption = post_caption;
+        
+          //dividimos el post en un array
+          var caption_split = caption.split(" ");
+        
+          //recorremos los items del arreglo
+          for(var hashtag in caption_split) {
+              
+              //Si algun item del arreglo comienza con # entonces tenemos un hashtag, si no, lo ignoramos
+              if (caption_split[hashtag].match("^#")) {
+        
+                //Le quitamos el # para poder trabajar con el string
+                hashtag_name = caption_split[hashtag].replace('#','');
+        
+                //Mandamos llamar la función encargada de verificar si el # existe o no 
+                $.ajax({
+                    url:ajaxPhp,
+                    type: 'POST',
+                    contentType:'application/x-www-form-urlencoded; charset=UTF-8',
+                    data: {operacion: 'captionHashtag', hashtag_name: hashtag_name, post_id: post_id},
+                    beforeSend: function(){
+                      //Antes de enviar la petición
+                      
+                    }
+                  })
+                  .done(function(data) {
+                    //Operación exitosa
+                  });
+                
+              }
+          }
+         
+        }
+
 });
 
+
+
+
 //JAVASCRIPT
+
+//UPLOAD CARE INFO
 UPLOADCARE_LOCALE = "en";
 UPLOADCARE_TABS = "file facebook instagram";
 UPLOADCARE_PUBLIC_KEY = "16e381e4b3ec66d54756";
+
+//Mostrar imagen subida
+var image = document.getElementById('image');
+var widget = uploadcare.Widget('[role=uploadcare-uploader]');
+widget.onUploadComplete(function (fileInfo) {
+  image.src = fileInfo.cdnUrl;
+});

@@ -27,7 +27,7 @@
 					$error = 'Email is already in use';
 				}else{
 					$getFromU->registerUser($email, $screenName, $password);
-					header('Location: steps.php?step=1');
+					header('Location: settings.php');
 				}
 			}
 		}

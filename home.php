@@ -18,7 +18,7 @@
 		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts">
 			<?php
 				//Llamamos los posts del usuario 
-				$getFromP->posts($user_id); 
+				$getFromP->feedPosts($user_id)
 			?>
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"></div>
