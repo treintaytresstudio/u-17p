@@ -19,7 +19,12 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3"></div>
 		<!-- posts -->
-		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts">
+		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 hashtag-posts">
+
+            <div class="section-title">
+                <h1><?php echo '#'.$hashtag_name ?></h1>
+                <?php $getFromH->isFollowingHashtag($user_id,$hashtag_name); ?>
+            </div>
 			<?php
 				//Llamamos los posts del usuario 
                 $getFromH->postsHashtag($hashtag_name);

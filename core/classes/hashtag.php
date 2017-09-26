@@ -63,7 +63,7 @@ class Hashtag extends Post
 
     //Mostramos todos los posts pertenecientes al Hashtag
     public function postsHashtag($hashtag_name){
-        
+        //Sacamos el id del hashtag
         $hashtag_id = $this->hashtagId($hashtag_name);
 
         //Datos del post
@@ -71,17 +71,137 @@ class Hashtag extends Post
         $stmt->bindParam(":hashtag_id", $hashtag_id , PDO::PARAM_STR);
         $stmt->execute();
 
-        $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $count = $stmt->rowCount();
 
-        foreach($posts as $post){
+        if($count > 0){
+            $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
             
-            //Sacamos el id del post
-            $post_id = $post->post_id;
-            //Llamamos a la función para imprimir el post en post class  
-            $postPrint = $this->printPost($post_id);
-
+            foreach($posts as $post){
+                
+                //Sacamos el id del post
+                $post_id = $post->post_id;
+                //Llamamos a la función para imprimir el post en post class  
+                $postPrint = $this->printPost($post_id);
+    
+            }
+        }else{
+            echo $count.' Sorry we cant find post for #'.$hashtag_name;
         }
 
+    }
+
+    //Seguir hashtag
+    public function followHashtag($user_id, $hashtag_name){
+        //Sacamos el id del hashtag
+        $hashtag_id = $this->hashtagId($hashtag_name);
+
+        //Tiempo
+        $hashtag_follow_time = date('Y-m-d H:i:s');
+
+        $stmt = $this->pdo->prepare("INSERT INTO hashtag_followers (hashtag_id, user_id, hashtag_follow_time) VALUES (:hashtag_id, :user_id, :hashtag_follow_time)");
+        $stmt->bindParam(":hashtag_id", $hashtag_id, PDO::PARAM_INT);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $stmt->bindParam(":hashtag_follow_time", $hashtag_follow_time, PDO::PARAM_STR);
+        $stmt->execute();
+    }
+
+    //Dejar de seguir hashtag
+    public function unFollowHashtag($user_id, $hashtag_name){
+        //Sacamos el id del hashtag
+        $hashtag_id = $this->hashtagId($hashtag_name);
+
+        $stmt = $this->pdo->prepare("DELETE FROM hashtag_followers WHERE hashtag_id = :hashtag_id AND user_id = :user_id");
+        $stmt->bindParam(":hashtag_id", $hashtag_id, PDO::PARAM_INT);
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_INT);
+        $stmt->execute();
+    }
+
+    //Saber si el usuario lo está siguiendo o no y en base a eso mostramos los botones correspondientes en el perfil
+    public function isFollowingHashtag($user_id,$hashtag_name){
+        //Sacamos el id del hashtag
+        $hashtag_id = $this->hashtagId($hashtag_name);
+
+        $stmt = $this->pdo->prepare("SELECT * FROM hashtag_followers WHERE user_id = :user_id AND hashtag_id = :hashtag_id");
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->bindParam(":hashtag_id", $hashtag_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $count = $stmt->rowCount();
+        if($count > 0){
+            echo 
+            '<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+                'FOLLOWING <?php echo "#".$hashtag_name; ?>'.
+            '</button>';
+
+            '<button style="display:none;" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+                'FOLLOW <?php echo "#".$hashtag_name; ?>'.
+            '</button>';
+        }else{
+            echo 
+            '<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+                'FOLLOW <?php echo "#".$hashtag_name; ?>'.
+            '</button>';
+
+            echo 
+            '<button style="display:none;" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+                'FOLLOWING <?php echo "#".$hashtag_name; ?>'.
+            '</button>';
+        }
+
+    }
+
+    //Obtener los datos del hashtag
+    public function getHashtagData($hashtag_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM hashtags WHERE  hashtag_id = :hashtag_id");
+        $stmt->bindParam(":hashtag_id", $hashtag_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchObject();
+    }
+
+    //Obtener los hashtag a los que el usuario sigue
+    public function userHashtags($user_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM hashtag_followers WHERE user_id = :user_id LIMIT 10");
+        $stmt->bindParam(":user_id", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($hashtags as $hashtag){
+            //Obtenemos el id del hashtag
+            $hashtag_id = $hashtag->hashtag_id;
+            //Obtenemos los datos del hashtag
+            $hd = $this->getHashtagData($hashtag_id);
+
+            echo '<li><a href="hashtag.php?hashtag_name='.$hd->hashtag_name.'">#'.$hd->hashtag_name.'</a></li>';
+        }
+
+    }
+
+    //Trending topic
+    public function trendingUsersHome(){
+        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC");
+        $stmt->execute();
+        $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($hashtags as $hashtag){
+            //Sacamos el id del usuario
+            $hashtag_id = $hashtag->hashtag_id;
+            //Sacamos cuantos posts tiene el hashtag
+            $countPost = $this->getHashtagsPostsCount($hashtag_id);
+            //Sacamos los datos del usuario
+            $hd = $this->getHashtagData($hashtag_id);
+            echo '<li><a href="hashtag.php?hashtag_name='.$hd->hashtag_name.'">#'.$hd->hashtag_name.'</a><p>'.$countPost.' Posts</p></li>';
+        }
+    }
+
+    //Obtenemos el total de posts en el hashtag
+    public function getHashtagsPostsCount($hashtag_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM hashtag_post WHERE hashtag_id = :hashtag_id");
+        $stmt->bindParam(":hashtag_id",$hashtag_id,PDO::PARAM_STR);
+        $stmt->execute();
+        $count = $stmt->rowCount();
+        return $count;
     }
 
 

@@ -33,6 +33,39 @@
         
     }
 
+    //Seguir hashtag
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'followHashtag'){
+        
+        $user_id = $_POST['user_id'];
+        $hashtag_name = $_POST['hashtag_name'];
+
+        if(isset($_POST['user_id']) && !empty($_POST['user_id']) && isset($_POST['hashtag_name']) && !empty($_POST['hashtag_name'])){
+            //Seguimos usuario
+            $followHashtag = $getFromH->followHashtag($user_id, $hashtag_name);
+        }else{
+            //Hubo un error
+            echo 0;
+        }    
+        
+    }
+
+    //Dejar de seguir hashtag
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'unFollowHashtag'){
+        
+        $user_id = $_POST['user_id'];
+        $hashtag_name = $_POST['hashtag_name'];
+
+        if(isset($_POST['user_id']) && !empty($_POST['user_id']) && isset($_POST['hashtag_name']) && !empty($_POST['hashtag_name'])){
+            //Seguimos usuario
+            $unFollowHashtag = $getFromH->unFollowHashtag($user_id, $hashtag_name);
+        }else{
+            //Hubo un error
+            echo 0;
+        }    
+        
+    }
+
+
     //Post nuevo
     if(isset($_POST['operacion']) && $_POST['operacion'] === 'newPost'){
 

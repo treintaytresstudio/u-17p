@@ -2,6 +2,6 @@
     include '../core/init.php';
     $getFromU->logOut();
     if($getFromU->loggedIn() === false){
-		header('Location: ../index.php');
-	}
+		  header('Location: ../index.php');
+	  }
 ?>

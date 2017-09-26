@@ -167,6 +167,38 @@ class User{
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
+    //Trending users
+    public function trendingUsers(){
+        $stmt = $this->pdo->prepare("SELECT reciver, COUNT(*) FROM follow GROUP BY reciver ORDER BY COUNT(*) DESC");
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($users as $user){
+            //Sacamos el id del usuario
+            $user_id = $user->reciver;
+            //Sacamos los datos del usuario
+            $userData = $this->userData($user_id);
+
+            echo '<li><a href="profile.php?username='.$userData->username.'"><span class="avatar" style="background:url('.$userData->profileImage.');"></span></a></li>';
+
+        }
+    }
+
+    //Trending users home 
+    public function trendingUsersHome(){
+        $stmt = $this->pdo->prepare("SELECT reciver, COUNT(*) FROM follow GROUP BY reciver ORDER BY COUNT(*) DESC");
+        $stmt->execute();
+        $users = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($users as $user){
+            //Sacamos el id del usuario
+            $user_id = $user->reciver;
+            //Sacamos los datos del usuario
+            $userData = $this->userData($user_id);
+            echo '<li><a href="profile.php?username='.$userData->username.'"><span class="avatar" style="background:url('.$userData->profileImage.');"></span> '.$userData->screenName.'</a></li>';
+        }
+    }
+
     
 }
 

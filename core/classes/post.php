@@ -188,9 +188,10 @@ class Post extends User
     //Feed posts del usuario
     public function feedPosts($user_id){
          //Datos del feed
-         $stmt = $this->pdo->prepare("SELECT * from posts  WHERE post_user IN (SELECT reciver FROM follow WHERE sender=:sender) OR post_user=:post_user ORDER BY post_id DESC");
+         $stmt = $this->pdo->prepare("SELECT * from posts  WHERE post_user IN (SELECT reciver FROM follow WHERE sender=:sender) OR post_user IN (SELECT user_id FROM hashtag_followers WHERE user_id=:user_id) OR post_user=:post_user ORDER BY post_id DESC");
          $stmt->bindParam(":sender", $user_id , PDO::PARAM_STR);
          $stmt->bindParam(":post_user", $user_id , PDO::PARAM_STR);
+         $stmt->bindParam(":user_id", $user_id , PDO::PARAM_STR);
          $stmt->execute();
  
          $posts = $stmt->fetchAll(PDO::FETCH_OBJ);

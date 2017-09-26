@@ -44,6 +44,47 @@ $("document").ready(function(){
 
     });
 
+    //Seguir hashtag
+    $("#followHashtagBtn").on("click", function(){
+        var user_id = $(this).data('user-id');
+        var hashtag_name = $(this).data('hashtag-name');
+
+        $.ajax({
+            url:ajaxPhp,
+            type: 'POST',
+            data: {operacion: 'followHashtag', user_id: user_id, hashtag_name: hashtag_name},
+            beforeSend: function(){
+              //
+            },
+            complete: function(res){
+                //$("#followHashtagBtn").hide();
+                //$("#unFollowHashtagBtn").show();
+                location.reload();
+
+            }
+          });
+    });
+
+    //Dejar de seguir hashtag
+    $("#unFollowHashtagBtn").on("click", function(){
+        var user_id = $(this).data('user-id');
+        var hashtag_name = $(this).data('hashtag-name');
+
+        $.ajax({
+            url:ajaxPhp,
+            type: 'POST',
+            data: {operacion: 'unFollowHashtag', user_id: user_id, hashtag_name: hashtag_name},
+            beforeSend: function(){
+              //
+            },
+            complete: function(res){
+                //$("#unFollowHashtagBtn").hide();
+                //$("#followHashtagBtn").show();
+                location.reload();
+            }
+          });
+    });
+
     //Borrar post
     $(".confirmDeletePost").on("click" ,function(){
         var post_id = $(this).data('post-id');
