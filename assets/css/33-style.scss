@@ -948,7 +948,7 @@ body{
     align-items:center;
 
     input{
-        width:75%;
+        width:100%;
         height: 55px;
         border-radius:50px;
         background:$white;
@@ -959,7 +959,10 @@ body{
         font-weight: lighter;
     }
 }
-
+#explore-search-data{
+    width: 75%;
+    margin:0 auto;
+}
 .explore-hashtag-item{
     width: 100%;
     height: auto;
@@ -971,7 +974,9 @@ body{
     .explore-hashtag-item-header{
         width: 100%;
         height: 200px;
-        background: $main;
+        background-size:cover !important;
+        background-position:center !important;
+        background-color: $main;
     }
 
     .explore-hashtag-item-info{
@@ -980,6 +985,7 @@ body{
         h5{
             margin:0;
             padding:0;
+            color:$accent;
         }
     }
 }

@@ -149,6 +149,19 @@ $("document").ready(function(){
         })
     });
 
+    //Buscar hashtags
+    $("#explore-search").keyup(function(){
+        var searchExplore = $(this).val();
+        if(searchExplore.length == 0){
+            $(".hideOnSearch").css("display", "flex");
+        }else if(searchExplore.length > 0){
+            $(".hideOnSearch").css("display", "none");
+        }
+        $.post(ajaxPhp, {searchExplore:searchExplore},function(data){
+            $("#explore-search-data").html(data);
+        })
+    });
+
     //Cambiar foto de perfil del usuario
     $("#changeImagePhoto").click(function(e){
         event.preventDefault(e);

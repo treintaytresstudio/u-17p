@@ -108,6 +108,38 @@
         }
 
     }
+
+    //Buscar usuario
+    if(isset($_POST['search']) && !empty($_POST['search'])){
+        $search = $getFromU->checkInput($_POST['search']);
+        $result = $getFromU->search($search);
+        
+        if(!empty($result)){
+            echo '<div class="menu-search-result"><ul>';
+            foreach($result as $user){
+                echo '<li>'.
+                '<div class="avatar" style="background: url('.$user->profileImage.');"></div>'.
+                '<a href="profile.php?username='.$user->username.'">'.$user->screenName.'</a>'.
+                '</li>';
+            }
+            echo '</ul></div>';
+        }
+
+    }
+
+    //Buscar hashtags
+    if(isset($_POST['searchExplore']) && !empty($_POST['searchExplore'])){
+        $searchExplore = $getFromU->checkInput($_POST['searchExplore']);
+        $result = $getFromH->searchHashtags($searchExplore);
+        
+        if($result){
+            foreach($result as $hashtag){
+                $post_id = $hashtag->post_id;
+                $getFromP->printPost($post_id);
+            }
+        }
+
+    }
     
     //Cambiar foto de perfil del usuario
     if(isset($_GET['operacion']) && $_GET['operacion'] === "updateProfileImage"){

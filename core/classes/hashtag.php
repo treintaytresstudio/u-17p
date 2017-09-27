@@ -178,9 +178,9 @@ class Hashtag extends Post
 
     }
 
-    //Trending topic
+    //Trending topic Home
     public function trendingUsersHome(){
-        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC");
+        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC LIMIT 10");
         $stmt->execute();
         $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -202,6 +202,79 @@ class Hashtag extends Post
         $stmt->execute();
         $count = $stmt->rowCount();
         return $count;
+    }
+
+    public function randomColor(){
+        return sprintf('#%06X', mt_rand(0, 0xFFFFFF));
+    }
+
+    //Trending topic Explore
+    public function trendingHashtagsExplore(){
+        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC LIMIT 12");
+        $stmt->execute();
+        $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($hashtags as $hashtag){
+            //Sacamos el id del usuario
+            $hashtag_id = $hashtag->hashtag_id;
+            //Sacamos cuantos posts tiene el hashtag
+            $countPost = $this->getHashtagsPostsCount($hashtag_id);
+            //Sacamos los datos del Hashtag
+            $hd = $this->getHashtagData($hashtag_id);
+            //Sacamos el cover del hashtag
+            $cover = $this->getHashtagTrendCover($hashtag_id);
+            
+            //Mostramos el cover
+            $coverHeader = "url('$cover')";
+
+            //Si no existe cover, entonces generamos un color random
+            if($cover === ''){
+                $coverHeader = $this->randomColor();
+            }
+
+            echo 
+            '<!-- explore hashtag item -->'.
+            '<div class="col-sm-12 col-md-12 col-lg-4 col-xl-4">'.
+                '<div class="explore-hashtag-item">'.
+                    '<div class="explore-hashtag-item-header" style="background:'.$coverHeader.';"></div>'.
+                    '<div class="explore-hashtag-item-info">'.
+                        '<h5>#'.$hd->hashtag_name.'</h5>'.
+                        '<p>'.$countPost.' Posts</p>'.
+                        '<button class="mdl-button mdl-js-button mdl-button--raised">'.
+                            'FOLLOW'.
+                        '</button>'.
+                    '</div>'.
+                '</div>'.
+            '</div><!-- /explore hashtag item -->';
+        }
+    }
+
+    //Obtener el último post con foto del hashtag
+    public function getHashtagTrendCover($hashtag_id){
+        $stmt = $this->pdo->prepare("SELECT posts.post_image, posts.post_id 
+        FROM `hashtag_post` 
+        INNER JOIN posts 
+        ON hashtag_post.post_id = posts.post_id 
+        WHERE hashtag_post.hashtag_id = :hashtag_id
+        AND posts.post_image IS NOT NULL 
+        ORDER BY posts.post_id DESC
+        LIMIT 1");
+        $stmt->bindParam(":hashtag_id",$hashtag_id,PDO::PARAM_STR);
+        $stmt->execute();
+
+        $cover = $stmt->fetch(PDO::FETCH_OBJ);
+        return $cover->post_image;
+    }
+
+    //Buscar Hashtags
+    public function searchHashtags($searchExplore){
+        $searchM = '%'.$searchExplore.'%';
+        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_caption LIKE ?");
+        $stmt->bindParam(1, $searchM, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+        
     }
 
 
