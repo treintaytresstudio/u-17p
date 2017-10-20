@@ -29,7 +29,7 @@ class User{
 
         if($count > 0){
             $_SESSION['user_id'] = $user->user_id;
-            header('Location: home.php');
+            echo 1;
         }else{
             return false;
         }
@@ -45,16 +45,18 @@ class User{
     }
 
     //Registro de usuario
-    public function registerUser($email, $screenName, $password){
+    public function registerUser($email, $screenName, $password, $username){
         $hashPassword = md5($password);
-        $stmt = $this->pdo->prepare("INSERT INTO users (email, password, screenName, profileImage, profileCover) VALUES (:email, :password, :screenName, 'assets/images/defaultProfileImage.png', 'assets/images/defaultCoverImage.png')");
+        $stmt = $this->pdo->prepare("INSERT INTO users (email, password, screenName, profileImage, profileCover,username) VALUES (:email, :password, :screenName, 'assets/images/defaultProfileImage.png', 'assets/images/defaultCoverImage.png',:username)");
         $stmt->bindParam(":email", $email , PDO::PARAM_STR);
         $stmt->bindParam(":password", $hashPassword , PDO::PARAM_STR);
         $stmt->bindParam(":screenName", $screenName , PDO::PARAM_STR);
+        $stmt->bindParam(":username", $username , PDO::PARAM_STR);
         $stmt->execute();
 
         $user_id = $this->pdo->lastInsertId();
         $_SESSION['user_id'] = $user_id;
+        echo 1;
     }
 
     //Asignamos username

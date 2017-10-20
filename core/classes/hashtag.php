@@ -269,7 +269,7 @@ class Hashtag extends Post
     //Buscar Hashtags
     public function searchHashtags($searchExplore){
         $searchM = '%'.$searchExplore.'%';
-        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_caption LIKE ?");
+        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_caption LIKE ? ORDER BY post_id DESC");
         $stmt->bindParam(1, $searchM, PDO::PARAM_STR);
         $stmt->execute();
 

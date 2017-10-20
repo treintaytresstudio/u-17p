@@ -65,4 +65,11 @@
 
 </section>
 
+<div class="container">
+	<div style="width: 600px; margin:0 auto;">
+		<?php $getFromP->posts($user->user_id); ?>
+	</div>
+	
+</div>
+
 <?php include BASE_URL.'/includes/footer.php'; ?>

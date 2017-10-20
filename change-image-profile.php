@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="form-item--space">
-		    <input type="submit" id="changeImagePhoto" class="btn btn-primary btn-block btn-lg bg-accent" name="signup" value="UPDATE">
+		    <input type="submit" id="changeImagePhoto" class="btn btn-primary btn-block btn-lg bg-accent" value="UPDATE">
 		</div>
     </form>
 </div>

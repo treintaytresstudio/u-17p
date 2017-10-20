@@ -1,5 +1,8 @@
 //JQUERY
 $("document").ready(function(){
+
+    getNotifications();
+
     var ajaxPhp = '../u-17p/core/ajax/ajax.php';
     var postsHome = '../u-17p/includes/posts_home.php';
     var regex = /[#|@](\w+)$/ig
@@ -19,6 +22,8 @@ $("document").ready(function(){
             complete: function(data){
                 $("#followBtn").hide();
                 $("#unFollowBtn").show();  
+
+                followerNot(sender,reciver);
             }
           });
 
@@ -162,6 +167,30 @@ $("document").ready(function(){
         })
     });
 
+    //Like post
+    $(".likePost").on("click",function(){
+        var post_id = $(this).data('post-id');
+        $("#"+post_id+"u").show();
+        $("#"+post_id+"l").hide();
+        likePost(post_id);
+    });
+
+    //Quitamos like
+    $(".unLikePost").on("click",function(){
+        var post_id = $(this).data('post-id');
+        $("#"+post_id+"u").hide();
+        $("#"+post_id+"l").show();
+        unLikePost(post_id);
+    });
+
+    //Comentar en post
+    $("#commentBtn").click(function(){
+        var post_id = $(this).data('post-id');
+        var comment = $('#pcival'+post_id).val();
+        var userScreenName = $(this).data('user-screenName');
+        commentPost(post_id,comment);
+    });
+
     //Cambiar foto de perfil del usuario
     $("#changeImagePhoto").click(function(e){
         event.preventDefault(e);
@@ -224,19 +253,32 @@ $("document").ready(function(){
             contentType:'application/x-www-form-urlencoded; charset=UTF-8',
             data: {user_id: user_id, operacion: 'updateSettings', screenName: screenName, username: username, bio: bio, country: country},
             beforeSend: function(){
-              $("#settingsBtn").val('Loading');
+
+              $('.not-update').addClass('animated fadeIn');
+              $('.not-update').removeClass('fadeOut');
             }
           })
           .done(function(data) {
+              
               if(data == 1){
-                  //El usuario, está disponible
-                  $("#settingsUsername").removeClass("settings-input-error");
-                  $(".settings-response-username").hide().html("");
+              //El usuario, está disponible
+              $("#settingsUsername").removeClass("settings-input-error");
+              $(".settings-response-username").hide().html("");
+
+              //Mostramos notificación
+              $(".not-update").show();
+
+              //Cerramos notificación
+              setTimeout(function(){
+                $('.not-update').removeClass('fadeIn');
+                $('.not-update').addClass('animated fadeOut');
+              }, 2000);
+
               }else if(data == 0){
-                //El usuario no está disponible
                 $("#settingsUsername").addClass("settings-input-error");
-                $(".settings-response-username").show().html("Username is already taken, please enter a new username").css("color","red");
+                $(".settings-response-username").show().html("The username is already taken, please choose other option");
               }
+              
           });
     });
 
@@ -248,7 +290,6 @@ $("document").ready(function(){
         var post_image = $("#post_image").val(); 
 
 
-        //LLamamos al archivo ajax para ejecutar la función de cambiar los datos del usuario en la sección settings
         $.ajax({
             url:ajaxPhp,
             type: 'POST',
@@ -263,10 +304,14 @@ $("document").ready(function(){
             
             //Verificamos que el caption no venga vacío
             if(data == 0){
-                //Si viene vacío
+                //Si viene vacío el caption entonces
                 //Mostramos al usuario un error
                 $("#newPostInput").css("border", "1px solid red");
                 $("#captionError").html("The caption cant be empty").css("color","red");
+            }else if(data == 400){
+                //Si viene vacío la imagen entonces
+                //Mostramos al usuario un error
+                $("#captionError").html("You have to select an image").css("color","red");
             }else{
                 //Si no viene vacío entonces
                 //Cerramos nuevo post
@@ -275,23 +320,34 @@ $("document").ready(function(){
                 $("#newPostInput").val('');
                 //Recargamos el div con el nuevo post
                 //$(".posts").load(location.href + " .posts>*", "");
-                location.reload(); 
+                
 
                 var post_id = data;
 
+
+                //Insertamos el post en firebase
+                postFb(post_id,user_id);
+
+
                 //Llamamos a la función encargada de verificar si existen # en el caption del post
                 hashtagPost(post_caption, post_id);
+
+                location.reload();
             }
+
           });
     });
 
     ////////////----------Funciones----------////////////
+    
+    //Confirmación para borrar post
     function deletePostConfirm(post_id){
         $(".bg-action").show();
         $(".boxConfirmDeletePost").css("display","flex");
         $(".confirmDeletePost").attr('data-post-id', post_id);
     }
 
+    //Función para sacar los hashtags del caption post
     function hashtagPost(post_caption,post_id){
         
           //recibimos el caption del post
@@ -327,10 +383,9 @@ $("document").ready(function(){
               }
           }
          
-        }
+    }
 
 });
-
 
 
 

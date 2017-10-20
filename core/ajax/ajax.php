@@ -1,6 +1,75 @@
 <?php 
     include '../init.php';
 
+    //Login
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'login'){
+        $email = $_POST['email'];
+        $password = $_POST['password'];
+
+
+        if(!empty($email) or !empty($password)){
+            $email = $getFromU->checkInput($email);
+            $password = $getFromU->checkInput($password);
+
+            if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+                echo 100;
+            }else{
+                if($getFromU->login($email, $password) === false){
+                    //Si el correo o la contraseña estan mal entonces
+                    echo 200;
+                }
+            }
+        }else{
+            //el correo o la contraseña o ambos están vacíos
+            echo 300;
+        }
+    }
+
+    //Registro
+    if(isset($_POST['operacion']) && $_POST['operacion'] === 'register'){
+        $screenName = $_POST['screenName'];
+        $password = $_POST['password'];
+        $email = $_POST['email'];
+        $username = $_POST['username'];
+
+        if(empty($screenName)){
+            echo 5;
+        }else if(empty($email)){
+            echo 6;
+        }else if(empty($password)){
+            echo 7;
+        }else if(empty($username)){
+            echo 8;
+        }else{
+            $email = $getFromU->checkInput($email);
+            $screenName = $getFromU->checkInput($screenName);
+            $password = $getFromU->checkInput($password);
+            if(filter_var($email, FILTER_VALIDATE_EMAIL) === false){
+                //Si el correo no tiene un formato válido
+                echo 100;
+            }else if(strlen($screenName)>20){
+                //El nombre debe de estar entre 6 y 20 caracteres
+                echo 600;
+            }else if(strlen($password)< 5){
+                //La contraseña debe ser mayor a 5 caracteres
+                echo 700;
+            }else{
+                if($getFromU->checkEmail($email) === true){
+                    //El correo ya está en uso
+                    echo 800;
+                }else if($getFromU->checkUserName($username) === false){
+                    //El usuario ya está en uso
+                    echo 900;
+                }else{
+                    $getFromU->registerUser($email, $screenName, $password, $username);
+                   
+                }
+            }
+        }
+
+    }
+
+
     //Seguir usuario
     if(isset($_POST['operacion']) && $_POST['operacion'] === 'followUser'){
         
@@ -74,8 +143,13 @@
         $post_image = $_POST['post_image'];
 
         if(isset($_POST['post_caption']) && !empty($_POST['post_caption'])){
-            //Creamos post
-            $post = $getFromP->newPost($user_id, $post_caption, $post_image);
+            if(empty($post_image)) {
+                //La imagen viene vacía
+                echo 400;
+            }else{
+                //Creamos post
+                $post = $getFromP->newPost($user_id, $post_caption, $post_image);
+            }
         }else{
             //El caption viene vacío y regresamos un error para que lo llenen
             echo 0;

@@ -1,4 +1,5 @@
 <?php
+	$post_open = 0;
     include 'core/init.php';
     $user_id = $_SESSION['user_id'];
 	$user = $getFromU->userData($user_id);
@@ -21,7 +22,7 @@
 		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts">
 			<?php
 				//Llamamos los posts del usuario 
-				$getFromP->feedPosts($user_id)
+				$getFromP->feedPosts($user_id);
 			?>
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">

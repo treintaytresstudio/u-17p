@@ -24,8 +24,41 @@ class Post extends User
         echo $post_id;
     }
 
+    //Firebase data
+    public function firebaseRead($post_id){
+        $url = 'https://u-17p-964f5.firebaseio.com/posts/'.$post_id.'/likes.json';
+        
+        /*$curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_exec($curl);
+        curl_close($curl);*/
+
+        // init curl object        
+        $ch = curl_init();
+
+        // define options
+        $optArray = array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true
+        );
+
+        // apply those options
+        curl_setopt_array($ch, $optArray);
+
+        // execute request and get response
+        $result = curl_exec($ch);
+
+        $likes = json_decode($result);
+        foreach($likes as $like)
+
+            {
+                 echo $like->post_id . "\n";
+                 
+            } 
+    }
+
     //Mostramos un post
-    public function printPost($post_id){
+    public function printPost($post_id, $user_connected){
         //Datos del post
         $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_id = :post_id");
         $stmt->bindParam(":post_id", $post_id , PDO::PARAM_STR);
@@ -41,7 +74,7 @@ class Post extends User
             echo '<!-- post -->'.
             '<div class="post" id="'.$post->post_id.'">';
                 if(!empty($post->post_image)){
-                    echo'<a href="post.php?id='.$post->post_id.'">'.
+                    echo'<a href="post.php?post_open=1&id='.$post->post_id.'">'.
                         '<div class="post-image" style="background:url('.$post->post_image.');"></div>'.
                         '</a>';
 
@@ -55,7 +88,6 @@ class Post extends User
                     '</div>'.
                     '<div class="post-caption">'.
                         '<p class="post-caption-text">'.$this->getPostLinks($post->post_caption).'</p>'.
-                        '<a class="color-mainDark bold" href="post.php?id='.$post->post_id.'">View post </a>'.
                     '</div>'.
                     '<div class="post-likes-users">'.
                         '<ul>'.
@@ -67,10 +99,15 @@ class Post extends User
                             '<li><span>People who likes this post</span></li>'.    
                         '</ul>'.
                     '</div>'.
+                    '<div class="post-liked" data-post-id="'.$post->post_id.'">'.
+                    '</div>'.
                     '<div class="post-actions">'.
                         '<ul class="post-actions-items">'.
-                            '<li><i class="material-icons">favorite</i></li>'.
-                            '<li><i class="material-icons">comment</i></li>'.
+                            '<li>
+                                <i class="material-icons likePost" id="'.$post->post_id.'l" data-post-id="'.$post->post_id.'">favorite_border</i>
+                                <i class="material-icons unLikePost" id="'.$post->post_id.'u" data-post-id="'.$post->post_id.'">favorite</i>
+                                <span id="'.$post->post_id.'likew"></span></li>'.
+                            '<li><a href="post.php?post_open=1&id='.$post->post_id.'"><i class="material-icons">chat_bubble_outline</i></a></li>'.
                         '</ul>'.
                         '<button id="demo-menu-lower-right'.$post->post_id.'"'.
                         'class="mdl-button mdl-js-button mdl-button--icon">'.
@@ -78,7 +115,7 @@ class Post extends User
                         '</button>'.
                         '<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"'.
                             'for="demo-menu-lower-right'.$post->post_id.'">';
-                        if($user_id === $post->post_user){
+                        if($user_connected === $post->post_user){
                             echo 
                             '<li class="mdl-menu__item deletePost" data-post-id="'.$post->post_id.'">Delete</li>';
                         }else{
@@ -87,10 +124,34 @@ class Post extends User
                             '<li class="mdl-menu__item"><a href="'.BASE_URL.'/post/'.$post->post_id.'">View Post</a></li>';
                         }
                         echo '</ul>'.
-                    '</div>'.
-				'</div>'.
-			'</div><!-- /post -->';
+                    '</div>';
+                    if(isset($_GET['post_open']) && $_GET['post_open'] == 1 ){
+                        echo 
+                        '<div class="post-comments">'.
+                            '<div class="post-comments-wrap">'.
+                              '<div class="post-comment-input">'.
+                                '<input type="text" placeholder="Enter your comment" id="pcival'.$post->post_id.'">'.
+                                '<button class="mdl-button mdl-js-button mdl-button--icon">
+                                  <i class="material-icons" id="commentBtn" data-post-id="'.$post->post_id.'">send</i>
+                                </button>'.
+                              '</div>'.
+                            '</div>'.
+                            '<div class="post-comments-items-wrap">'.
+                                '<ul class="post-comments-items">'.
+                                '</ul>'.
+                            '</div>'.
+                    '</div>';
+                    }
+            
+			echo '</div>'.
+			'</div><!-- /post -->'.
+            '<script>'.
+            'getLikesCount('.$post->post_id.');'.
+            'isLiked('.$post->post_id.');'.
+            'getComments('.$post->post_id.');'.
+            '</script>';
         }
+
     }
 
     //Mostramos los posts del usuario
@@ -113,7 +174,7 @@ class Post extends User
 
     //Mostramos el post abierto
     public function post($post_id,$user_id,$post_open){
-
+        $user_connected = $user_id;
         //Datos del post
         $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_id = :post_id ORDER BY post_id DESC");
         $stmt->bindParam(":post_id", $post_id , PDO::PARAM_STR);
@@ -125,7 +186,7 @@ class Post extends User
             //Sacamos el id del post
             $post_id = $post->post_id;
             //Llamamos a la función para imprimir el post
-            $postPrint = $this->printPost($post_id);
+            $postPrint = $this->printPost($post_id,$user_connected);
         }
     }
 
@@ -187,6 +248,8 @@ class Post extends User
 
     //Feed posts del usuario
     public function feedPosts($user_id){
+
+         $user_connected = $user_id;
          //Datos del feed
          $stmt = $this->pdo->prepare("SELECT * from posts  WHERE post_user IN (SELECT reciver FROM follow WHERE sender=:sender) OR post_user IN (SELECT user_id FROM hashtag_followers WHERE user_id=:user_id) OR post_user=:post_user ORDER BY post_id DESC");
          $stmt->bindParam(":sender", $user_id , PDO::PARAM_STR);
@@ -194,14 +257,24 @@ class Post extends User
          $stmt->bindParam(":user_id", $user_id , PDO::PARAM_STR);
          $stmt->execute();
  
-         $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        //Si no hay actividad entonces mostramos mensaje de bienveida
+        if(empty($posts)){
+            echo '<img src="assets/images/welcome.jpg">'.
+                '<div class="no-post-message"><h4>You dont have any activity, please create your first post.</h4></div>';
+        }
+        //Mostramos los posts correspondientes
+        else{
+            foreach($posts as $post){
+                 //Sacamos el id del post
+                 $post_id = $post->post_id;
+                 //Llamamos a la función para imprimir el post
+                 $postPrint = $this->printPost($post_id,$user_connected);
+            }
+        }
  
-         foreach($posts as $post){
-             //Sacamos el id del post
-             $post_id = $post->post_id;
-             //Llamamos a la función para imprimir el post
-             $postPrint = $this->printPost($post_id);
-         }
+        
     }
     
 }

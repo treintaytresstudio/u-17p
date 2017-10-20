@@ -13,9 +13,17 @@
     
 ?>
 
-<div class="full">
-    
+<div class="not-update hide animated fadeIn">
+    <span>Your account has updated successfully</span>
+</div>
+
+<div class="not-user-update hide animated fadeIn">
+    <span>Ther username has updated successfully</span>
+</div>
+<div class="container-center">
+
 <div class="settings">
+    <h1>Account settings</h1>
     <form class="form" id="settingsForm" data-user="<?php echo $user->user_id; ?>">
         <div class="form-item">
             <label for="username">Name</label>
@@ -57,8 +65,22 @@
                 
             </select>
         </div>
+        <div class="sk-fading-circle hide settings-loader">
+          <div class="sk-circle1 sk-circle"></div>
+          <div class="sk-circle2 sk-circle"></div>
+          <div class="sk-circle3 sk-circle"></div>
+          <div class="sk-circle4 sk-circle"></div>
+          <div class="sk-circle5 sk-circle"></div>
+          <div class="sk-circle6 sk-circle"></div>
+          <div class="sk-circle7 sk-circle"></div>
+          <div class="sk-circle8 sk-circle"></div>
+          <div class="sk-circle9 sk-circle"></div>
+          <div class="sk-circle10 sk-circle"></div>
+          <div class="sk-circle11 sk-circle"></div>
+          <div class="sk-circle12 sk-circle"></div>
+        </div>
         <div class="form-item--space">
-		    <input type="submit" class="btn btn-primary btn-lg btn-block bg-accent" id="settingsBtn" name="signup" value="Update">
+		    <input type="submit" class="btn btn-primary btn-lg bg-accent" id="settingsBtn" name="signup" value="Update">
 		</div>
     </form>
 </div>

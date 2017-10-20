@@ -12,8 +12,16 @@
     <!-- MDL -->
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <!-- animate -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <!-- main style -->
     <link rel="stylesheet" href="assets/css/33-style.css">
+    <!-- firebase js -->
+    <script src="https://www.gstatic.com/firebasejs/4.4.0/firebase.js"></script>
+    <script src="../u-17p/core/js/firebase.js"></script>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
     <title>Ultra</title>
 
 </head>
@@ -34,7 +42,7 @@
     </div>
 </div>
 
-<header class="menu">
+<header class="menu" id="menuUser" data-user-id="<?php echo $user->user_id ?>" data-user-screenName="<?php echo $user->screenName?>">
     <div class="menu-left flex-a-center">
         <div class="menu-logo">
             <img src="assets/images/logo.png" alt="">
@@ -49,7 +57,7 @@
         <ul>
             <li><a href="home.php"><i class="material-icons">home</i></a></li>
             <li><a href="explore.php"><i class="material-icons">public</i></a></li>
-            <li><a href="#"><i class="material-icons">notifications</i></a></li>
+            <li><a href="#"><i class="material-icons">notifications</i><span id="total_notifications"></span></a></li>
             <li class="menu-user">
                 <div class="menu-avatar avatar" style="background: url(<?php echo $user->profileImage; ?>);"></div>
                 <div class="btn-group">
