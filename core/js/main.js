@@ -90,42 +90,6 @@ $("document").ready(function(){
           });
     });
 
-    //Borrar post
-    $(".confirmDeletePost").on("click" ,function(){
-        var post_id = $(this).data('post-id');
-
-        $.ajax({
-            url:ajaxPhp,
-            type: 'POST',
-            data: {operacion: 'deletePost', post_id: post_id},
-            beforeSend: function(){
-              //
-            },
-            complete: function(res){
-                //Cerramos caja de confirmación
-                $(".boxConfirmDeletePost").css("display","none");
-                $(".bg-action").hide();
-                //recargamos posts
-                //$(".posts").load(location.href + " .posts>*", "");
-                location.reload();
-                
-            }
-          });
-    });
-
-
-    //Cancelar borrar post
-    $(".cancellDeletePost").on("click", function(){
-        $(".boxConfirmDeletePost").css("display","none");
-        $(".bg-action").hide();
-    });
-
-    //Abrir la confirmación para eliminar el post
-    $(".deletePost").on("click",function(){
-        var post_id = $(this).data('post-id');
-        deletePostConfirm(post_id);
-    });
-
     //Dropdowns Bootstrap
     $('.dropdown-toggle').dropdown()
 
@@ -167,21 +131,7 @@ $("document").ready(function(){
         })
     });
 
-    //Like post
-    $(".likePost").on("click",function(){
-        var post_id = $(this).data('post-id');
-        $("#"+post_id+"u").show();
-        $("#"+post_id+"l").hide();
-        likePost(post_id);
-    });
-
-    //Quitamos like
-    $(".unLikePost").on("click",function(){
-        var post_id = $(this).data('post-id');
-        $("#"+post_id+"u").hide();
-        $("#"+post_id+"l").show();
-        unLikePost(post_id);
-    });
+    
 
     //Comentar en post
     $("#commentBtn").click(function(){
@@ -320,6 +270,12 @@ $("document").ready(function(){
                 $("#newPostInput").val('');
                 //Recargamos el div con el nuevo post
                 //$(".posts").load(location.href + " .posts>*", "");
+
+                $( ".feed-container" ).load( "includes/feed_inc.php", function() {
+                    componentHandler.upgradeAllRegistered()
+                });
+
+               
                 
 
                 var post_id = data;
@@ -332,7 +288,7 @@ $("document").ready(function(){
                 //Llamamos a la función encargada de verificar si existen # en el caption del post
                 hashtagPost(post_caption, post_id);
 
-                location.reload();
+                //location.reload();
             }
 
           });
@@ -341,11 +297,6 @@ $("document").ready(function(){
     ////////////----------Funciones----------////////////
     
     //Confirmación para borrar post
-    function deletePostConfirm(post_id){
-        $(".bg-action").show();
-        $(".boxConfirmDeletePost").css("display","flex");
-        $(".confirmDeletePost").attr('data-post-id', post_id);
-    }
 
     //Función para sacar los hashtags del caption post
     function hashtagPost(post_caption,post_id){
@@ -387,6 +338,88 @@ $("document").ready(function(){
 
 });
 
+//Delegation event "Para manejar clicks después de cargar con Ajax"
+
+//Like post
+$(document).on('click', '.likePost', function(){
+    var post_id = $(this).data('post-id');
+    $("#"+post_id+"u").show();
+    $("#"+post_id+"l").hide();
+    likePost(post_id);
+});
+
+//Unlike post
+$(document).on('click', '.unLikePost', function(){
+    var post_id = $(this).data('post-id');
+    $("#"+post_id+"u").hide();
+    $("#"+post_id+"l").show();
+    unLikePost(post_id);
+});
+
+//Cancelar borrar post
+$(document).on('click', '.cancellDeletePost', function(){
+   $(".boxConfirmDeletePost").css("display","none");
+   $(".bg-action").hide();
+});
+
+//Abrir la confirmación para eliminar el post
+$(document).on('click', '.deletePost', function(){
+    var post_id = $(this).data('post-id');
+    deletePostConfirm(post_id);
+});
+
+//Borar post
+function deletePostConfirm(post_id){
+    $(".bg-action").show();
+    $(".boxConfirmDeletePost").css("display","flex");
+    $(".confirmDeletePost").attr('data-post-id', post_id);
+}
+
+//Borrar post
+$(document).on('click', '.confirmDeletePost', function(){
+    console.log("valor de : post_id "+post_id)
+    var ajaxPhp = '../u-17p/core/ajax/ajax.php';
+    var post_id = $(this).attr('data-post-id');
+    console.log("valor de : post_id "+post_id);
+
+
+    $.ajax({
+        url:ajaxPhp,
+        type: 'POST',
+        data: {operacion: 'deletePost', post_id: post_id},
+        beforeSend: function(){
+          
+        },
+        complete: function(res){
+            //Cerramos caja de confirmación
+            $(".boxConfirmDeletePost").css("display","none");
+            $(".bg-action").hide();
+            //Recargamos posts
+            $( ".feed-container" ).load( "includes/feed_inc.php", function() {
+                //Material lite menu
+                componentHandler.upgradeAllRegistered()
+
+                //Mostramos notificación
+                $('.notification-body').addClass('animated fadeIn');
+                $('.notification-body').removeClass('fadeOut');
+
+                //Mostramos notificación
+                $(".notification-body").show();
+
+                //Cerramos notificación
+                setTimeout(function(){
+                  $('.notification-body').removeClass('fadeIn');
+                  $('.notification-body').addClass('animated fadeOut');
+                }, 2000);
+
+
+            });
+
+            var post_id = null;
+            
+        }
+      });
+});
 
 
 //JAVASCRIPT

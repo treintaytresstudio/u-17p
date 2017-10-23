@@ -1,6 +1,6 @@
 <?php
 	$post_open = 0;
-    include 'core/init.php';
+    include_once 'core/init.php';
     $user_id = $_SESSION['user_id'];
 	$user = $getFromU->userData($user_id);
 	
@@ -19,11 +19,8 @@
 			<?php include 'includes/trending-topic-home.php'; ?>
 		</div>
 		<!-- posts -->
-		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts">
-			<?php
-				//Llamamos los posts del usuario 
-				$getFromP->feedPosts($user_id);
-			?>
+		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts feed-container">
+			<?php include 'includes/feed_inc.php'; ?>
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
 			<?php include 'includes/trending-people-home.php'; ?>

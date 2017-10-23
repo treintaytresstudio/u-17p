@@ -163,6 +163,8 @@
         $post_id = $_POST['post_id'];
         //Borramos el post
         $post = $getFromP->deletePost($post_id);
+
+        echo 'estoy en ajax';
     }
 
     //Buscar usuario

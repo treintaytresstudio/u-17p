@@ -177,6 +177,9 @@ a{
     color: $white !important;
     border:none !important;
 }
+.feed-container{
+    padding-bottom: 50px;
+}
 
 .user-list{
 
@@ -720,6 +723,19 @@ a{
         font-weight: lighter;
         color: $white;
     }
+}
+
+.notification-body{
+    position: fixed;
+    bottom: 50px;
+    left: 20px;
+    width: 350px;
+    border-radius: 6px;
+    background: $main;
+    padding: 20px;
+    font-size: 16px;
+    font-weight: lighter;
+    color: $white;
 }
 
 .settings{
