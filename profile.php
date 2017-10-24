@@ -29,7 +29,7 @@
 ?>
 
 <section>
-	<div class="profile" style="background:url(<?php echo $profileData->profileCover; ?>);">
+	<div class="profile" style="background:url(<?php $cover = $getFromP->getCoverProfile($user_id); echo $cover; ?>);">
 		<div class="profile-wrap">
 			<div class="profile-info">
 				<div class="profile-info-item flex-a-center">

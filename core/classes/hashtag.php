@@ -269,7 +269,7 @@ class Hashtag extends Post
 
     //Trending topic Home
     public function trendingHashtagsHome(){
-        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC LIMIT 12");
+        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC LIMIT 9");
         $stmt->execute();
         $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
 

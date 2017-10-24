@@ -234,6 +234,23 @@ class User{
         }
     }
 
+    //Foto de cover
+    public function getCoverProfile($user_id){
+        $stmt = $this->pdo->prepare("SELECT posts.post_image, posts.post_id , posts.post_user
+        FROM posts 
+        INNER JOIN users 
+        ON posts.post_user = users.user_id 
+        WHERE posts.post_user= :user_id
+        AND posts.post_image IS NOT NULL 
+        ORDER BY posts.post_id DESC
+        LIMIT 1");
+        $stmt->bindParam(":user_id",$user_id,PDO::PARAM_STR);
+        $stmt->execute();
+
+        $cover = $stmt->fetch(PDO::FETCH_OBJ);
+        return $cover->post_image;
+    }
+
     
 }
 
