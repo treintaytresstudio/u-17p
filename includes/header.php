@@ -55,15 +55,15 @@
     </div>
     <nav>
         <ul>
-            <li><a href="home.php"><i class="material-icons">home</i></a></li>
-            <li><a href="explore.php"><i class="material-icons">public</i></a></li>
-            <li><a href="#"><i class="material-icons">notifications</i><span id="total_notifications"></span></a></li>
+            <li <?php if(isset($page) && $page == 1){?> class="active" <?php } ?>><a  href="home.php"><i class="material-icons">home</i>Home</a></li>
+            <li><a href="explore.php"><i class="material-icons">public</i>Trending</a></li>
+            <li><a href="#"><i class="material-icons">notifications</i>Notifications<span id="total_notifications"></span></a></li>
             <li class="menu-user">
-                <div class="menu-avatar avatar" style="background: url(<?php echo $user->profileImage; ?>);"></div>
+                <div class="menu-avatar avatar <?php if(isset($page) && $page == 4){echo "profile-active";}?>" style="background: url(<?php echo $user->profileImage; ?>);"></div>
                 <div class="btn-group">
-                    <button type="button" class="btn btn-menu-user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $user->screenName; ?>
-                    </button>
+                    <span  class="btn-menu-user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php echo strtok($user->screenName, " "); ?>
+                    </span>
                     <div class="dropdown-menu dropdown-menu-right">
                         <button class="dropdown-item" type="button"><a href="profile.php?username=<?php echo $user->username; ?>">Profile</a></button>
                         <button class="dropdown-item" type="button"><a href="change-image-profile.php">New Profile Image</a></button>

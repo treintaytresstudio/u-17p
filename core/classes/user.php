@@ -161,7 +161,11 @@ class User{
     //Buscar usuarios
     public function search($search){
         $searchM = $search.'%';
-        $stmt = $this->pdo->prepare("SELECT user_id, username, screenName, profileImage, profileCover FROM users WHERE username LIKE ? OR screenName LIKE ?");
+        $stmt = $this->pdo->prepare("(SELECT username, screenName as name FROM users
+WHERE username LIKE 'carlos' OR screenName LIKE ?)
+UNION
+(SELECT hashtag_alias, hashtag_name AS name  FROM hashtags
+WHERE hashtag_name LIKE ?)");
         $stmt->bindParam(1, $searchM, PDO::PARAM_STR);
         $stmt->bindParam(2, $searchM, PDO::PARAM_STR);
         $stmt->execute();
@@ -186,9 +190,29 @@ class User{
         }
     }
 
+    //Followings home
+    public function getFollowingsList($user_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM follow WHERE sender = :sender LIMIT 10");
+        $stmt->bindParam(":sender", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $users = $stmt->fetchAll(PDO::FETCH_OBJ);
+        foreach($users as $user){
+            //Sacamos el id del usuario
+            $user_id = $user->reciver;
+            //Sacamos los datos del usuario
+            $userData = $this->userData($user_id);
+
+            echo '<li><a href="profile.php?username='.$userData->username.'"><div class="avatar" style="background:url('.$userData->profileImage.');"></div>'.$userData->screenName.'</a></li>';
+
+        }
+
+    }
+
     //Trending users home 
-    public function trendingUsersHome(){
-        $stmt = $this->pdo->prepare("SELECT reciver, COUNT(*) FROM follow GROUP BY reciver ORDER BY COUNT(*) DESC");
+    public function suggestedUsersHome($user_id){
+        $stmt = $this->pdo->prepare("SELECT reciver, COUNT(*) FROM follow WHERE NOT reciver = :reciver GROUP BY reciver ORDER BY COUNT(*) DESC");
+        $stmt->bindParam(":reciver", $user_id , PDO::PARAM_STR);
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -197,7 +221,7 @@ class User{
             $user_id = $user->reciver;
             //Sacamos los datos del usuario
             $userData = $this->userData($user_id);
-            echo '<li><a href="profile.php?username='.$userData->username.'"><span class="avatar" style="background:url('.$userData->profileImage.');"></span> '.$userData->screenName.'</a></li>';
+            echo '<li><a href="profile.php?username='.$userData->username.'"><div class="avatar" style="background:url('.$userData->profileImage.');"></div></a></li>';
         }
     }
 

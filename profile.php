@@ -1,6 +1,9 @@
 <?php
+
     if(isset($_GET['username']) === true  && empty($_GET['username']) === false){
 		include 'core/init.php';
+
+		$page = 4;
 		
 		//Sabemos de quien es el perfil y sacamos sus datos
         $username = $getFromU->checkInput($_GET['username']);
@@ -65,11 +68,5 @@
 
 </section>
 
-<div class="container">
-	<div style="width: 600px; margin:0 auto;">
-		<?php $getFromP->posts($user->user_id); ?>
-	</div>
-	
-</div>
-
+ 
 <?php include BASE_URL.'/includes/footer.php'; ?>

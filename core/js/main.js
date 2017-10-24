@@ -1,6 +1,5 @@
 //JQUERY
 $("document").ready(function(){
-
     getNotifications();
 
     var ajaxPhp = '../u-17p/core/ajax/ajax.php';
@@ -269,14 +268,12 @@ $("document").ready(function(){
                 //Formateamos el valor del input
                 $("#newPostInput").val('');
                 //Recargamos el div con el nuevo post
-                //$(".posts").load(location.href + " .posts>*", "");
-
                 $( ".feed-container" ).load( "includes/feed_inc.php", function() {
                     componentHandler.upgradeAllRegistered()
                 });
 
-               
-                
+                //Actualizar contador de mini perfil
+                $( ".mini-profile-container" ).load( "includes/mini_profile_inc.php", function() {});
 
                 var post_id = data;
 
@@ -288,7 +285,24 @@ $("document").ready(function(){
                 //Llamamos a la función encargada de verificar si existen # en el caption del post
                 hashtagPost(post_caption, post_id);
 
-                //location.reload();
+                
+
+                //Mostramos notificación
+                setTimeout(function(){
+                  //Mostramos notificación
+                  $('.notification-body').html('Your post has been posted');
+                  $('.notification-body').addClass('animated fadeIn');
+                  $('.notification-body').removeClass('fadeOut');
+
+                  //Mostramos notificación
+                  $(".notification-body").show();
+                }, 1000);
+
+                //Cerramos notificación
+                setTimeout(function(){
+                  $('.notification-body').removeClass('fadeIn');
+                  $('.notification-body').addClass('animated fadeOut');
+                }, 3500);
             }
 
           });
@@ -397,23 +411,25 @@ $(document).on('click', '.confirmDeletePost', function(){
             //Recargamos posts
             $( ".feed-container" ).load( "includes/feed_inc.php", function() {
                 //Material lite menu
-                componentHandler.upgradeAllRegistered()
-
-                //Mostramos notificación
-                $('.notification-body').addClass('animated fadeIn');
-                $('.notification-body').removeClass('fadeOut');
-
-                //Mostramos notificación
-                $(".notification-body").show();
-
-                //Cerramos notificación
-                setTimeout(function(){
-                  $('.notification-body').removeClass('fadeIn');
-                  $('.notification-body').addClass('animated fadeOut');
-                }, 2000);
-
-
+                componentHandler.upgradeAllRegistered();
             });
+
+            //Mostramos notificación
+            $('.notification-body').addClass('animated fadeIn');
+            $('.notification-body').removeClass('fadeOut');
+
+            //Mostramos notificación
+            $(".notification-body").show();
+
+            //Cerramos notificación
+            setTimeout(function(){
+              $('.notification-body').removeClass('fadeIn');
+              $('.notification-body').addClass('animated fadeOut');
+            }, 2000);
+
+            //Actualizar contador de mini perfil
+            $( ".mini-profile-container" ).load( "includes/mini_profile_inc.php", function() {});
+
 
             var post_id = null;
             

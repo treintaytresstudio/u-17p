@@ -174,17 +174,23 @@
         
         if(!empty($result)){
             echo '<div class="menu-search-result"><ul>';
-            foreach($result as $user){
-                echo '<li>'.
-                '<div class="avatar" style="background: url('.$user->profileImage.');"></div>'.
-                '<a href="profile.php?username='.$user->username.'">'.$user->screenName.'</a>'.
+            foreach($result as $r){
+                if($r->username == ''){
+                    echo '<li>'.
+                '<span>#'.$r->name.'</span>'.
                 '</li>';
+            }else{
+                echo '<li>'.
+                '<span>user'.$r->name.'</span>'.
+                '</li>';
+                
             }
             echo '</ul></div>';
+            }
         }
 
     }
-
+    /*
     //Buscar usuario
     if(isset($_POST['search']) && !empty($_POST['search'])){
         $search = $getFromU->checkInput($_POST['search']);
@@ -202,6 +208,7 @@
         }
 
     }
+    */
 
     //Buscar hashtags
     if(isset($_POST['searchExplore']) && !empty($_POST['searchExplore'])){

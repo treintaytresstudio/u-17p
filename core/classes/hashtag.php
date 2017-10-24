@@ -266,6 +266,40 @@ class Hashtag extends Post
         return $cover->post_image;
     }
 
+
+    //Trending topic Home
+    public function trendingHashtagsHome(){
+        $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC LIMIT 12");
+        $stmt->execute();
+        $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($hashtags as $hashtag){
+            //Sacamos el id del hashtag
+            $hashtag_id = $hashtag->hashtag_id;
+
+            //Sacamos los datos del Hashtag
+            $hd = $this->getHashtagData($hashtag_id);
+            
+            //Sacamos el cover del hashtag
+            $cover = $this->getHashtagTrendCover($hashtag_id);
+            
+            //Mostramos el cover
+            $coverHeader = "url('$cover')";
+
+            //Si no existe cover, entonces generamos un color random
+            if($cover === ''){
+                $coverHeader = $this->randomColor();
+            }
+
+            echo 
+                '<!-- home trend item -->'.
+                '<li style="background:'.$coverHeader.';"></li>'.
+                '<!-- /home trend item -->';
+        }
+    }
+
+   
+
     //Buscar Hashtags
     public function searchHashtags($searchExplore){
         $searchM = '%'.$searchExplore.'%';

@@ -1,15 +1,17 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:300,400,700");
 * {
   box-sizing: border-box;
-  -webkit-transition: all 0.25s ease-in-out;
-  -moz-transition: all 0.25s ease-in-out;
-  -o-transition: all 0.25s ease-in-out;
-  transition: all 0.25s ease-in-out; }
+  -webkit-transition: all 0.15s ease-in-out;
+  -moz-transition: all 0.15s ease-in-out;
+  -o-transition: all 0.15s ease-in-out;
+  transition: all 0.15s ease-in-out; }
 
 body {
   background-color: #F5F6FA;
   overflow-x: hidden;
   font-weight: lighter;
-  color: #000 !important; }
+  color: #000 !important;
+  font-family: 'Roboto', sans-serif !important; }
 
 .hide {
   display: none; }
@@ -73,7 +75,6 @@ button {
         margin-right: 15px; }
 
 a {
-  color: #0085EA !important;
   cursor: pointer; }
 
 a:hover {
@@ -493,27 +494,70 @@ a:hover {
     padding: 0;
     display: flex;
     align-items: center; }
+    .menu nav ul li:hover {
+      border-bottom: 4px solid #0085EA; }
+    .menu nav ul li:hover a {
+      color: #000 !important; }
+    .menu nav ul li:hover i {
+      color: #000 !important; }
     .menu nav ul li {
-      margin: 0 10px; }
+      margin: 0 10px;
+      height: 75px;
+      display: flex;
+      align-items: center;
+      border-bottom: 4px solid white; }
       .menu nav ul li a {
-        color: #000;
-        font-weight: bold;
-        font-size: 15px; }
+        color: #bebfbf;
+        font-weight: bolder;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        height: 75px; }
         .menu nav ul li a i {
           font-size: 32px !important;
-          position: relative;
-          top: 5px;
-          color: #000; }
+          color: #bebfbf;
+          width: 30px;
+          margin-right: 3px; }
+      .menu nav ul li #total_notifications {
+        position: absolute;
+        bottom: 38px;
+        right: -16px;
+        background: red;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        font-size: 10px;
+        font-weight: lighter; }
+    .menu nav ul .menu-user:hover {
+      border-bottom: 4px solid white !important; }
     .menu nav ul .menu-user {
       display: flex;
       align-items: center;
-      margin-left: 25px; }
+      margin-left: 25px;
+      width: 150px;
+      display: flex;
+      justify-content: flex-end;
+      position: relative; }
+      .menu nav ul .menu-user span {
+        padding-left: 5px; }
       .menu nav ul .menu-user a {
         color: #000 !important; }
       .menu nav ul .menu-user .menu-avatar {
         width: 40px;
         height: 40px;
         margin-right: 0px; }
+
+.active {
+  border-bottom: 4px solid #0085EA !important; }
+  .active a {
+    color: #000 !important; }
+  .active i {
+    color: #000 !important; }
 
 .full {
   width: 100%;
@@ -532,6 +576,9 @@ a:hover {
     font-size: 16px;
     font-weight: lighter;
     color: white; }
+
+.profile-active {
+  border-bottom: 2px solid #0085EA; }
 
 .no-post-message {
   width: 100%;
@@ -958,6 +1005,137 @@ a:hover {
       height: 75px;
       display: block;
       border: 3px solid #0085EA; }
+
+.mini-profile {
+  width: 100%;
+  background: white;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; }
+  .mini-profile .mini-profile-top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; }
+    .mini-profile .mini-profile-top .avatar {
+      width: 65px;
+      height: 65px;
+      margin-right: 10px;
+      flex-shrink: 0;
+      min-width: 50px;
+      min-height: 50px; }
+    .mini-profile .mini-profile-top a {
+      color: #000 !important;
+      font-size: 18px;
+      font-weight: bold; }
+      .mini-profile .mini-profile-top a span {
+        display: block;
+        font-weight: lighter;
+        font-size: 14px; }
+  .mini-profile .mini-profile-stats ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+    .mini-profile .mini-profile-stats ul li {
+      margin-bottom: 10px; }
+  .mini-profile .mini-profile-stats .number {
+    font-size: 24px;
+    font-weight: bold;
+    padding-right: 16px;
+    border-right: 1px solid #000; }
+  .mini-profile .mini-profile-stats .s-type {
+    font-size: 16px;
+    font-weight: lighter;
+    color: #000;
+    padding-left: 10px; }
+
+.home-section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+  .home-section-title h2 {
+    font-size: 21px;
+    margin: 0;
+    padding: 0;
+    font-weight: lighter; }
+  .home-section-title a {
+    color: #bebfbf !important; }
+
+.followings-home {
+  width: 100%;
+  background: white;
+  margin-top: 15px;
+  padding: 20px; }
+  .followings-home ul {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+    .followings-home ul li {
+      margin-bottom: 16px; }
+      .followings-home ul li a {
+        display: flex;
+        align-items: center;
+        color: #000 !important;
+        font-size: 16px;
+        font-weight: bold; }
+      .followings-home ul li .avatar {
+        width: 45px;
+        height: 45px;
+        margin-right: 10px; }
+
+.trends-home {
+  padding: 20px;
+  background: white;
+  margin-bottom: 15px; }
+  .trends-home ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; }
+    .trends-home ul li {
+      width: 65px;
+      height: 65px;
+      background-size: cover !important;
+      background-position: center !important;
+      border-radius: 6px;
+      margin-bottom: 10px; }
+
+.suggested-home {
+  margin-top: 25px;
+  background: white;
+  padding: 20px; }
+  .suggested-home ul {
+    list-style: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 0px; }
+    .suggested-home ul li {
+      margin-bottom: 10px; }
+      .suggested-home ul li .avatar {
+        width: 65px;
+        height: 65px; }
+
+.new-post-home {
+  background: #0085EA;
+  padding: 10px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; }
+  .new-post-home input {
+    border-radius: 20px;
+    background: white;
+    border: none;
+    outline: none;
+    padding-left: 10px;
+    height: 30px; }
 
 .error-input {
   border: 2px solid red !important; }
