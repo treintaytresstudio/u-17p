@@ -581,12 +581,12 @@ a{
             outline:none;
         }
 
-        .menu-search-result{
+        .menu-search-result-wrap{
             width: 315px;
             height: auto;
             overflow: hidden;
             background: $white;
-            border:1px solid $gray2;
+            border:0px solid $gray2;
             border-top:none;
             position:absolute;
             top: 40px;
@@ -602,22 +602,43 @@ a{
                 li:hover{
                     background:$gray;
                 }
+
                 
                 li{
-                    padding:10px;
                     display: flex;
                     align-items:center;
 
                     a{
                         font-weight: bold;
                         color: $main !important;
-                        padding:10px 0;
+                        padding:10px 20px;
+                        display: flex;
+                        align-items:center;
+                        width: 100%;
                     }
 
                     .avatar{
                         margin-right:10px;
                         width: 50px;
                         height: 50px;
+                    }
+                }
+                li.h-menu-list{
+                    a{
+                        display: block !important;
+
+                        .block{
+                            font-size: 18px;
+                            font-weight: bold;
+                        }
+
+                        span{
+                            display: block;
+                        }
+
+                        .tg{
+                            color:$gray2;
+                        }
                     }
                 }
             }
@@ -723,6 +744,7 @@ a{
 
    
 }
+
 
 .active{
     border-bottom: 4px solid $accent !important;

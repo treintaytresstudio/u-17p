@@ -112,7 +112,7 @@ $("document").ready(function(){
             
         }
         $.post(ajaxPhp, {search:search},function(data){
-            $(".menu-search-result-wrap").html(data);
+            $(".menu-search-result-list").html(data);
             $("#menu-search").css("border", "none")
         })
     });

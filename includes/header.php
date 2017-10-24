@@ -50,7 +50,13 @@
         <div class="menu-search">
             <input type="text" placeholder="Search" id="menu-search">
             <i class="material-icons menu-search-input-icon">search</i>
-            <div class="menu-search-result-wrap"></div>
+            <div class="menu-search-result-wrap">
+                <div class="menu-search-result">
+                    <ul class="menu-search-result-list">
+                        
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
     <nav>

@@ -153,6 +153,15 @@ class User{
         return $user->user_id;
     }
 
+    //Sacar el id del usuario según el screenName
+    public function userIdByscreenName($screenName){
+        $stmt = $this->pdo->prepare("SELECT user_id FROM users WHERE screenName = :screenName");
+        $stmt->bindParam(":screenName", $screenName , PDO::PARAM_STR);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_OBJ);
+        return $user->user_id;
+    }
+
     //Sabemos si el usuario está logueado o no
     public function loggedIn(){
         return (isset($_SESSION['user_id'])) ? true : false;
@@ -161,11 +170,11 @@ class User{
     //Buscar usuarios
     public function search($search){
         $searchM = $search.'%';
-        $stmt = $this->pdo->prepare("(SELECT username, screenName as name FROM users
-WHERE username LIKE 'carlos' OR screenName LIKE ?)
-UNION
-(SELECT hashtag_alias, hashtag_name AS name  FROM hashtags
-WHERE hashtag_name LIKE ?)");
+        $stmt = $this->pdo->prepare("(SELECT t_search, screenName as name FROM users
+        WHERE screenName LIKE ?)
+        UNION
+        (SELECT t_search,  hashtag_name AS name  FROM hashtags
+        WHERE hashtag_name LIKE ?)");
         $stmt->bindParam(1, $searchM, PDO::PARAM_STR);
         $stmt->bindParam(2, $searchM, PDO::PARAM_STR);
         $stmt->execute();

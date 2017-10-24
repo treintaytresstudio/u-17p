@@ -454,36 +454,47 @@ a:hover {
       border: none;
       padding-left: 20px;
       outline: none; }
-    .menu .menu-search .menu-search-result {
+    .menu .menu-search .menu-search-result-wrap {
       width: 315px;
       height: auto;
       overflow: hidden;
       background: white;
-      border: 1px solid #bebfbf;
+      border: 0px solid #bebfbf;
       border-top: none;
       position: absolute;
       top: 40px;
       left: 0px;
       right: 0;
       margin: auto; }
-      .menu .menu-search .menu-search-result ul {
+      .menu .menu-search .menu-search-result-wrap ul {
         list-style: none;
         margin: 0;
         padding: 0; }
-        .menu .menu-search .menu-search-result ul li:hover {
+        .menu .menu-search .menu-search-result-wrap ul li:hover {
           background: #F5F6FA; }
-        .menu .menu-search .menu-search-result ul li {
-          padding: 10px;
+        .menu .menu-search .menu-search-result-wrap ul li {
           display: flex;
           align-items: center; }
-          .menu .menu-search .menu-search-result ul li a {
+          .menu .menu-search .menu-search-result-wrap ul li a {
             font-weight: bold;
             color: #000 !important;
-            padding: 10px 0; }
-          .menu .menu-search .menu-search-result ul li .avatar {
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            width: 100%; }
+          .menu .menu-search .menu-search-result-wrap ul li .avatar {
             margin-right: 10px;
             width: 50px;
             height: 50px; }
+        .menu .menu-search .menu-search-result-wrap ul li.h-menu-list a {
+          display: block !important; }
+          .menu .menu-search .menu-search-result-wrap ul li.h-menu-list a .block {
+            font-size: 18px;
+            font-weight: bold; }
+          .menu .menu-search .menu-search-result-wrap ul li.h-menu-list a span {
+            display: block; }
+          .menu .menu-search .menu-search-result-wrap ul li.h-menu-list a .tg {
+            color: #bebfbf; }
   .menu .menu-logo {
     width: 100px; }
     .menu .menu-logo img {

@@ -173,19 +173,26 @@
         $result = $getFromU->search($search);
         
         if(!empty($result)){
-            echo '<div class="menu-search-result"><ul>';
             foreach($result as $r){
-                if($r->username == ''){
+                if($r->t_search == 'hashtag'){
+                    $hashtag = $getFromH->hashtagId($r->name);
+                    $h_data = $getFromH->getHashtagData($hashtag);
+                    $h_posts = $getFromH->getHashtagsPostsCount($h_data->hashtag_id);
+                    echo '<li class="h-menu-list">'.
+                    '<a href="hashtag.php?hashtag_name='.$h_data->hashtag_name.'">'.
+                    '<span class="block">#'.$h_data->hashtag_name.'</span>'.
+                    '<span class="tg">'.$h_posts.' posts</span>'.
+                    '</li>';
+                }else{
+                    $user = $getFromU->userIdByscreenName($r->name);
+                    $u_data = $getFromU->userData($user);
                     echo '<li>'.
-                '<span>#'.$r->name.'</span>'.
-                '</li>';
-            }else{
-                echo '<li>'.
-                '<span>user'.$r->name.'</span>'.
-                '</li>';
-                
-            }
-            echo '</ul></div>';
+                    '<a href="profile.php?username='.$u_data->username.'">'.
+                    '<div class="avatar" style="background: url('.$u_data->profileImage.');"></div>'.
+                    '<span>'.$r->name.'</span>'.
+                    '</a>'.
+                    '</li>';
+                }
             }
         }
 
