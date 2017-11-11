@@ -68,7 +68,7 @@ class Hashtag extends Post
         $user_connected = $user_id;
 
         //Datos del post
-        $stmt = $this->pdo->prepare("SELECT * FROM hashtag_post WHERE hashtag_id = :hashtag_id");
+        $stmt = $this->pdo->prepare("SELECT * FROM hashtag_post WHERE hashtag_id = :hashtag_id ORDER BY hashtag_id DESC");
         $stmt->bindParam(":hashtag_id", $hashtag_id , PDO::PARAM_STR);
         $stmt->execute();
 
@@ -82,7 +82,7 @@ class Hashtag extends Post
                 //Sacamos el id del post
                 $post_id = $post->post_id;
                 //Llamamos a la función para imprimir el post en post class  
-                $postPrint = $this->printPostImage($post_id, $user_connected);
+                $postPrint = $this->printPostImageHashtag($post_id, $user_connected);
     
             }
         }else{
@@ -130,23 +130,23 @@ class Hashtag extends Post
         $count = $stmt->rowCount();
         if($count > 0){
             echo 
-            '<button class="btn btn-lg bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<span class="btn btn-tw btn-tw-linear" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOWING <?php echo "#".$hashtag_name; ?>'.
-            '</button>';
+            '</span>';
 
-            '<button style="display:none;" class="btn btn-lg bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<span style="display:none;" class="btn btn-tw btn-tw-linear bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOW <?php echo "#".$hashtag_name; ?>'.
-            '</button>';
+            '</span>';
         }else{
             echo 
-            '<button class="btn btn-lg bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<span class="btn btn-tw btn-tw-linear bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOW <?php echo "#".$hashtag_name; ?>'.
-            '</button>';
+            '</span>';
 
             echo 
-            '<button style="display:none;" class="btn btn-lg bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<span style="display:none;" class="btn btn-tw btn-tw-linear" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOWING <?php echo "#".$hashtag_name; ?>'.
-            '</button>';
+            '</span>';
         }
 
     }
@@ -180,7 +180,7 @@ class Hashtag extends Post
     }
 
     //Trending topic Home
-    public function trendingUsersHome(){
+    public function trendsList(){
         $stmt = $this->pdo->prepare("SELECT hashtag_id, COUNT(*) FROM hashtag_post GROUP BY hashtag_id ORDER BY COUNT(*) DESC LIMIT 10");
         $stmt->execute();
         $hashtags = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -192,7 +192,7 @@ class Hashtag extends Post
             $countPost = $this->getHashtagsPostsCount($hashtag_id);
             //Sacamos los datos del usuario
             $hd = $this->getHashtagData($hashtag_id);
-            echo '<li><a href="hashtag.php?hashtag_name='.$hd->hashtag_name.'">#'.$hd->hashtag_name.'</a><p>'.$countPost.' Posts</p></li>';
+            echo '<a href="hashtag.php?hashtag_name='.$hd->hashtag_name.'"><li><i class="material-icons">trending_up</i><span>#'.$hd->hashtag_name.'</span><p>'.$countPost.' Posts</p></li></a>';
         }
     }
 

@@ -19,11 +19,11 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 trends-block">
             <div class="home-section-title">
-                <h2>Trends for you</h2>
-                <a href="#" class="acc-color">Change</a>
+                <h2>Trending topic</h2>
+                <a href="#" class="acc-color"></a>
             </div>
             <ul>
-                <?php $getFromH->trendingUsersHome(); ?> 
+                <?php $getFromH->trendsList(); ?> 
             </ul>            
         </div>
 		<!-- posts -->
@@ -36,11 +36,11 @@
                 </div>
                 
             </div>
-            <div class="posts-mosaic">
-                    <?php
-                        //Llamamos los posts del usuario 
+            <div id="grid" style="margin-top: 5px;">
+                    <?php 
                         $getFromH->postsHashtag($hashtag_name, $user_id);
                     ?>
+                
             </div>
 		</div> <!-- /posts -->
 	</div>

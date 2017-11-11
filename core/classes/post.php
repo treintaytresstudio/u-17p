@@ -156,6 +156,41 @@ class Post extends User
 
     }
 
+    //Mostramos un post para post de hashtags
+    public function printPostImageHashtag($post_id, $user_connected){
+        //Datos del post
+        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_id = :post_id");
+        $stmt->bindParam(":post_id", $post_id , PDO::PARAM_STR);
+        $stmt->execute();
+
+        $postData = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($postData as $post){
+
+            $user_id = $post->post_user;
+            $user = $this->userData($user_id); 
+
+                if(!empty($post->post_image)){
+
+                    echo '<div class="box">
+                            <a href="post.php?post_open=1&id='.$post->post_id.'">
+                            <div data-thumbnail="'.$post->post_image.'" ></div>
+                            
+                            <div data-image="'.$post->post_image.'" ></div>
+                            
+                            <div class="thumbnail-caption">
+                            <div class="avatar" style="background:url('.$user->profileImage.'); width:50px; height:50px; margin:0 auto; margin-bottom:5px;"></div>
+                            '.$user->screenName.' post
+                            </div>
+                            </a>
+                        </div>';
+                       
+                }
+                
+        }
+
+    }
+
     //Mostramos los posts del usuario
     public function posts($user_id){
 

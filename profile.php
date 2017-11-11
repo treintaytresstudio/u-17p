@@ -6,6 +6,7 @@
 		$page = 4;
 		
 		//Sabemos de quien es el perfil y sacamos sus datos
+		$username_profile = $getFromU->checkInput($_GET['username']);
         $username = $getFromU->checkInput($_GET['username']);
         $profileId = $getFromU->userIdByUsername($username);
 		$profileData = $getFromU->userData($profileId);
@@ -34,7 +35,7 @@
 		<i class="material-icons">keyboard_backspace</i>
 		<span>Back</span>
 	</div>-->
-	<div class="profile" style="background:url(<?php $cover = $getFromP->getCoverProfile($user_id); echo $cover; ?>);">
+	<div class="profile" style="background:url(<?php $user_id = $profileOwner; $cover = $getFromP->getCoverProfile($user_id); echo $cover; ?>);" data-profile-username="<?php echo $username_profile; ?>">
 		<div class="profile-wrap">
 			<div class="profile-info">
 				<div class="profile-info-item flex-a-center">
@@ -98,21 +99,42 @@
 
 		<!-- Post profile -->
 		<div class="profile-content">
-			<?php 
-				if(isset($_GET['postsO']) && $_GET['postsO'] == 1){
-					include 'includes/profile_posts_inc.php';
-				}else if(!isset($_GET['followersO']) && !isset($_GET['followingsO'])){
-					include 'includes/profile_posts_inc.php';
-				}
+			<?php
 
-				if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){
-					include 'includes/profile_followings_inc.php';
-				}
+				$user_id = $profileOwner;
 
-				if(isset($_GET['followersO']) && $_GET['followersO'] == 1){
-					include 'includes/profile_followers_inc.php';
-				}
-			?>
+				if(isset($_GET['postsO']) && $_GET['postsO'] == 1){ ?>
+				<div id="profile-posts">
+					<div class="posts-mosaic">
+						<?php $getFromP->posts($user_id); ?>
+					</div>
+				</div>
+				<?php }else if(!isset($_GET['followersO']) && !isset($_GET['followingsO'])){?>
+				<div id="profile-posts">
+					<div class="posts-mosaic">
+						<?php $getFromP->posts($user_id); ?>
+					</div>
+				</div>
+					
+				<?php }
+
+				if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){ ?>
+				<div id="profile-followings">
+					<h3>Followings list</h3>
+					<ul class="list-tw">
+						<?php $getFromF->getFollowingsList($reciver) ?>
+					</ul>
+				</div>
+				<?php } 
+
+				if(isset($_GET['followersO']) && $_GET['followersO'] == 1){ ?>
+				<div id="profile-followers">
+					<h3>Followers list</h3>
+					<ul class="list-tw">
+						<?php $getFromF->getFollowersList($reciver) ?>
+					</ul>
+				</div>
+				<?php } ?>
 		</div>
 		<!-- / -->
 </div>
