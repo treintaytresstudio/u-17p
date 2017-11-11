@@ -65,7 +65,9 @@
                     
                 </div>
                 <div class="menu-top-icons">
-                   <i class="material-icons">public</i>
+                    <a href="stream.php">
+                       <i class="material-icons <?php if($page === 'stream'){echo "active-menu-top";}?>">public</i>
+                   </a>
 
                    <i class="material-icons">notifications_none</i>
                 </div>
@@ -91,7 +93,7 @@
                     
             </div>
             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 menu-top-buttons">
-                <span class="btn btn-tw btn-tw-linear">Settings</span>
+                <a href="settings.php" class="btn btn-tw btn-tw-linear">Settings</a>
                 <span class="btn btn-tw btn-tw-linear bg-accent openNewPost">New post</span>
             </div>
         </div>

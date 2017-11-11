@@ -514,6 +514,10 @@ a:hover {
     align-items: center;
     width: 16%;
     justify-content: space-between; }
+    .menu-top .menu-top-icons a {
+      color: #000; }
+    .menu-top .menu-top-icons a:hover {
+      color: #0085EA; }
     .menu-top .menu-top-icons i {
       font-size: 28px;
       display: block;
@@ -1344,7 +1348,7 @@ a:hover {
     .mini-profile .mini-profile-stats .s-type {
       font-size: 20px;
       font-weight: lighter;
-      color: #a0a0a0;
+      color: #000;
       padding-left: 15px; }
 
 .section-component-title {
@@ -1591,6 +1595,9 @@ a:hover {
         background: white; }
       .list-tw .list-tw-item .list-tw-item-right .list-btns .btn-tw-linear:hover {
         background: #0085EA; }
+
+.active-menu-top {
+  color: #0085EA !important; }
 
 .no-post {
   text-align: center;

@@ -425,6 +425,33 @@ $(document).on('click', '.deletePost', function(){
     deletePostConfirm(post_id);
 });
 
+//Followers profile open
+$(document).on('click', '#profileFollowersLink', function(){
+    $( ".profile-content" ).load( "includes/profile_followers_inc.php" );
+    $("#profileFollowersLink").addClass('active');
+    $("#profileFollowingsLink").removeClass('active');
+    $("#profilePostLink").removeClass('active');
+
+});
+
+//Followings profile open
+$(document).on('click', '#profilePostLink', function(){
+    $( ".profile-content" ).load( "includes/profile_posts_inc.php" );
+    $("#profilePostLink").addClass('active');
+    $("#profileFollowersLink").removeClass('active');
+    $("#profileFollowingsLink").removeClass('active');
+
+});
+
+//Followings profile open
+$(document).on('click', '#profileFollowingsLink', function(){
+    $( ".profile-content" ).load( "includes/profile_followings_inc.php" );
+    $("#profileFollowingsLink").addClass('active');
+    $("#profileFollowersLink").removeClass('active');
+    $("#profilePostLink").removeClass('active');
+
+});
+
 //Borar post
 function deletePostConfirm(post_id){
     $(".bg-action").show();

@@ -80,58 +80,41 @@
 <div class="profile-side">
 		<div class="profile-side-nav">
 			<ul>
-				<li <?php if(isset($_GET['postsO']) && $_GET['postsO'] == 1){ echo 'class="active"'; } ?>>
+				<li id="profilePostLink" <?php if(isset($_GET['postsO']) && $_GET['postsO'] == 1){ echo 'class="active"'; }else if(!isset($_GET['followersO']) && !isset($_GET['followingsO'])){echo 'class="active"'; } ?>>
 					<span class="bold"><?php $getFromP->postCount($profileOwner) ?></span>
 					<span class="light">Posts</span>
 				</li>
-				<li <?php if(isset($_GET['followersO']) && $_GET['followersO'] == 1){ echo 'class="active"'; } ?>>
+				<li id="profileFollowersLink" <?php if(isset($_GET['followersO']) && $_GET['followersO'] == 1){ echo 'class="active"'; } ?>>
 					<span class="bold"><?php $getFromF->followersCount($profileOwner) ?></span>
 					<span class="light">Followers</span>
 				</li>
-				<li <?php if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){ echo 'class="active"'; } ?>>
+				<li id="profileFollowingsLink" <?php if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){ echo 'class="active"'; } ?>>
 					<span class="bold"><?php $getFromF->followingsCount($profileOwner) ?></span>
 					<span class="light">Followings</span>
 				</li>
 			</ul>
 		</div>
 		
-		<?php if(isset($_GET['postsO']) && $_GET['postsO'] == 1){ ?>
+
 		<!-- Post profile -->
 		<div class="profile-content">
-			<div id="profile-posts">
-				<div class="posts-mosaic">
-					<?php $getFromP->posts($profileOwner); ?>
-				</div>
-			</div>
+			<?php 
+				if(isset($_GET['postsO']) && $_GET['postsO'] == 1){
+					include 'includes/profile_posts_inc.php';
+				}else if(!isset($_GET['followersO']) && !isset($_GET['followingsO'])){
+					include 'includes/profile_posts_inc.php';
+				}
+
+				if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){
+					include 'includes/profile_followings_inc.php';
+				}
+
+				if(isset($_GET['followersO']) && $_GET['followersO'] == 1){
+					include 'includes/profile_followers_inc.php';
+				}
+			?>
 		</div>
 		<!-- / -->
-		<?php } ?>
-		
-		<?php if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){ ?>
-		<!-- Followings list -->
-		<div class="profile-content">
-			<div id="profile-followings">
-				<h3>Followings list</h3>
-				<ul class="list-tw">
-					<?php $getFromF->getFollowingsList($user_id) ?>
-				</ul>
-			</div>
-		</div>
-		<!-- / -->
-		<?php } ?>
-		
-		<?php if(isset($_GET['followersO']) && $_GET['followersO'] == 1){ ?>
-		<!-- Followers list -->
-		<div class="profile-content">
-			<div id="profile-followers">
-				<h3>Followers list</h3>
-				<ul class="list-tw">
-					<?php $getFromF->getFollowersList($reciver) ?>
-				</ul>
-			</div>
-		</div>
-		<!-- / -->
-		<?php } ?>
 </div>
 
  

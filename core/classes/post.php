@@ -146,7 +146,10 @@ class Post extends User
                 if(!empty($post->post_image)){
                     echo'<a href="post.php?post_open=1&id='.$post->post_id.'">'.
                         '<img class="lazyload animated fadeIn" src="assets/images/load.gif" data-src="'.$post->post_image.'">'.
-                        '</a>';
+                        '</a>'.
+                        '<script>'.
+                        'lazyload();'.
+                        '</script>';
                 }
                 
         }
@@ -251,6 +254,30 @@ class Post extends User
             return date('M j', $time);
         }else{
             return date('j M Y', $time);
+        }
+    }
+
+    public function streamPosts($user_id){
+        //Datos del post
+        $stmt = $this->pdo->prepare("SELECT * FROM posts ORDER BY post_id DESC");
+        $stmt->execute();
+
+        $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        if(empty($posts)){
+            echo '<div class="no-post">
+                    <img src="assets/images/picture.png" width="50px" style="width:50px !important;" alt="">
+                    <p>We dont have any post to show you yet</p>
+                 </div>';
+                
+        }else{
+            //Si el usuario tiene posts, entonces los mostramos
+            foreach($posts as $post){
+                //Sacamos el id del post
+                $post_id = $post->post_id;
+                //Llamamos a la función para imprimir el post
+                $postPrint = $this->printPost($post_id, $user_id);
+            }
         }
     }
 
