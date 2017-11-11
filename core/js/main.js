@@ -1,6 +1,6 @@
 //JQUERY
 $("document").ready(function(){
-    getNotifications();
+    //getNotifications();
 
     var ajaxPhp = '../u-17p/core/ajax/ajax.php';
     var postsHome = '../u-17p/includes/posts_home.php';
@@ -69,6 +69,44 @@ $("document").ready(function(){
           });
     });
 
+    //Reportar post
+    $(".reportPostBtn").on("click", function(){
+        var sender_report =$("#menuUser").data("user-id");
+        var post_id = $(this).data('post-id');
+
+        $.ajax({
+            url:ajaxPhp,
+            type: 'POST',
+            data: {operacion: 'reportPost', sender_report: sender_report, post_id: post_id},
+            beforeSend: function(){
+              //
+            }
+        
+          }).done(function(res) {
+            if(res == 1){
+                //Recargamos posts
+                $( ".feed-container" ).load( "includes/feed_inc.php", function() {
+                    //Material lite menu
+                    componentHandler.upgradeAllRegistered();
+                });
+                
+                //Mostramos notificación
+                $('.notification-body').html('You reported this post');
+                $('.notification-body').addClass('animated fadeIn');
+                $('.notification-body').removeClass('fadeOut');
+
+                //Mostramos notificación
+                $(".notification-body").show();
+
+                //Cerramos notificación
+                setTimeout(function(){
+                  $('.notification-body').removeClass('fadeIn');
+                  $('.notification-body').addClass('animated fadeOut');
+                }, 2000);
+            }
+        })
+    });
+
     //Dejar de seguir hashtag
     $("#unFollowHashtagBtn").on("click", function(){
         var user_id = $(this).data('user-id');
@@ -103,17 +141,22 @@ $("document").ready(function(){
     });
 
     //Buscar usuario
-    $("#menu-search").keyup(function(){
+    $(".input-search").keyup(function(){
         var search = $(this).val();
         if(search.length == 0){
             $(".menu-search-input-icon").css("color","#5b6775");
+            $(".menu-search-result-wrap").css("border","none");
+            $(".input-search").css("border-color","#000");
         }else if(search.length > 0){
             $(".menu-search-input-icon").css("color","#0085EA");
+            $(".input-search").css("border-color","#0085EA");
+            $(".menu-search-result-wrap").css("border-left","1px solid #0085EA");
+            $(".menu-search-result-wrap").css("border-right","1px solid #0085EA");
+            $(".menu-search-result-wrap").css("border-bottom","1px solid #0085EA");
             
         }
         $.post(ajaxPhp, {search:search},function(data){
-            $(".menu-search-result-list").html(data);
-            $("#menu-search").css("border", "none")
+            $(".menu-top-result-list").html(data);
         })
     });
 

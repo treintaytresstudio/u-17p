@@ -1,9 +1,10 @@
 <div class="trends-home">
-	<div class="home-section-title">
-		<h2>Trends for you</h2>
-		<a href="#">Update</a>
+	<div class="title">
+		<span>Trendings for you</span>
+		<i class="material-icons">arrow_forward</i>
 	</div>
-	<ul>
+	
+	<ul class="trends-home-list">
 		<?php $getFromH->trendingHashtagsHome(); ?>
 	</ul>
 </div>

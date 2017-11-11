@@ -62,9 +62,10 @@ class Hashtag extends Post
     }
 
     //Mostramos todos los posts pertenecientes al Hashtag
-    public function postsHashtag($hashtag_name){
+    public function postsHashtag($hashtag_name, $user_id){
         //Sacamos el id del hashtag
         $hashtag_id = $this->hashtagId($hashtag_name);
+        $user_connected = $user_id;
 
         //Datos del post
         $stmt = $this->pdo->prepare("SELECT * FROM hashtag_post WHERE hashtag_id = :hashtag_id");
@@ -81,7 +82,7 @@ class Hashtag extends Post
                 //Sacamos el id del post
                 $post_id = $post->post_id;
                 //Llamamos a la función para imprimir el post en post class  
-                $postPrint = $this->printPost($post_id);
+                $postPrint = $this->printPostImage($post_id, $user_connected);
     
             }
         }else{
@@ -129,21 +130,21 @@ class Hashtag extends Post
         $count = $stmt->rowCount();
         if($count > 0){
             echo 
-            '<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<button class="btn btn-lg bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOWING <?php echo "#".$hashtag_name; ?>'.
             '</button>';
 
-            '<button style="display:none;" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<button style="display:none;" class="btn btn-lg bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOW <?php echo "#".$hashtag_name; ?>'.
             '</button>';
         }else{
             echo 
-            '<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<button class="btn btn-lg bg-accent" id="followHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOW <?php echo "#".$hashtag_name; ?>'.
             '</button>';
 
             echo 
-            '<button style="display:none;" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
+            '<button style="display:none;" class="btn btn-lg bg-main" id="unFollowHashtagBtn" data-user-id="'.$user_id.'" data-hashtag-name="'.$hashtag_name.'">'.
                 'FOLLOWING <?php echo "#".$hashtag_name; ?>'.
             '</button>';
         }
@@ -279,6 +280,8 @@ class Hashtag extends Post
 
             //Sacamos los datos del Hashtag
             $hd = $this->getHashtagData($hashtag_id);
+
+            $name = $hd->hashtag_name;
             
             //Sacamos el cover del hashtag
             $cover = $this->getHashtagTrendCover($hashtag_id);
@@ -292,9 +295,11 @@ class Hashtag extends Post
             }
 
             echo 
-                '<!-- home trend item -->'.
-                '<li style="background:'.$coverHeader.';"></li>'.
-                '<!-- /home trend item -->';
+                '<!-- home trend item -->
+                <a href="hashtag.php?hashtag_name='.$name.'">
+                    <li style="background:'.$coverHeader.';"></li>
+                </a>
+                <!-- /home trend item -->';
         }
     }
 

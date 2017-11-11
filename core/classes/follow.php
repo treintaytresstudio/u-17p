@@ -39,12 +39,78 @@ class Follow extends User{
         $count = $stmt->rowCount();
         if($count > 0){
             echo 
-            '<button class="btn btn-primary btn-lg bg-main" id="unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'">FOLLOWING</button>'.
-            '<button class="btn btn-primary btn-lg bg-accent" id="followBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;">FOLLOW</button>';
+            '<button class="btn btn-tw btn-tw-linear" id="unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'">FOLLOWING</button>'.
+            '<button class="btn btn-tw btn-tw-linear bg-accent" id="followBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;">FOLLOW</button>';
         }else{
             echo 
-            '<button class="btn btn-primary btn-lg bg-accent" id="followBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'">FOLLOW</button>'.
-            '<button class="btn btn-primary btn-lg bg-main" id="unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;">FOLLOWING</button>';
+            '<button class="btn btn-tw btn-tw-linear bg-accent" id="followBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'">FOLLOW</button>'.
+            '<button class="btn btn-tw btn-tw-linear" id="unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;">FOLLOWING</button>';
+        }
+
+    }
+
+    //Followings home
+    public function getFollowingsList($user_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM follow WHERE sender = :sender LIMIT 10");
+        $stmt->bindParam(":sender", $user_id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $users = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($users as $user){
+            //Sacamos el id del usuario
+            $user_id = $user->reciver;
+            //Sacamos los datos del usuario
+            $userData = $this->userData($user_id);
+
+            $sender = $_SESSION['user_id'];
+            $reciver = $userData->user_id;
+
+            echo'<li class="list-tw-item">
+                    <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
+                    <div class="list-tw-item-right">
+                        <div class="list-tw-item-top">
+                            <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                        </div>
+                        <div class="list-btns">';
+                            $this->isFollowing($sender,$reciver);
+                        '</div>                   
+                    </div>
+                </li>';
+
+        }
+
+    }
+
+    //Followers list
+    public function getFollowersList($reciver){
+        $stmt = $this->pdo->prepare("SELECT * FROM follow WHERE reciver = :reciver LIMIT 10");
+        $stmt->bindParam(":reciver", $reciver, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $users = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($users as $user){
+            //Sacamos el id del usuario
+            $user_id = $user->sender;
+            //Sacamos los datos del usuario
+            $userData = $this->userData($user_id);
+
+            $sender = $_SESSION['user_id'];
+            $reciver = $userData->user_id;
+
+            echo'<li class="list-tw-item">
+                    <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
+                    <div class="list-tw-item-right">
+                        <div class="list-tw-item-top">
+                            <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                        </div>
+                        <div class="list-btns">';
+                           $this->isFollowing($sender,$reciver);
+                        '</div>                   
+                    </div>
+                </li>';
+
         }
 
     }

@@ -24,38 +24,6 @@ class Post extends User
         echo $post_id;
     }
 
-    //Firebase data
-    public function firebaseRead($post_id){
-        $url = 'https://u-17p-964f5.firebaseio.com/posts/'.$post_id.'/likes.json';
-        
-        /*$curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_exec($curl);
-        curl_close($curl);*/
-
-        // init curl object        
-        $ch = curl_init();
-
-        // define options
-        $optArray = array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true
-        );
-
-        // apply those options
-        curl_setopt_array($ch, $optArray);
-
-        // execute request and get response
-        $result = curl_exec($ch);
-
-        $likes = json_decode($result);
-        foreach($likes as $like)
-
-            {
-                 echo $like->post_id . "\n";
-                 
-            } 
-    }
 
     //Mostramos un post
     public function printPost($post_id, $user_connected){
@@ -75,7 +43,7 @@ class Post extends User
             '<div class="post" id="'.$post->post_id.'">';
                 if(!empty($post->post_image)){
                     echo'<a href="post.php?post_open=1&id='.$post->post_id.'">'.
-                        '<div class="post-image" style="background:url('.$post->post_image.');"></div>'.
+                        '<img class="post-image lazyload animated fadeIn" src="assets/images/load.gif" data-src="'.$post->post_image.'">'.
                         '</a>';
 
                 }
@@ -106,8 +74,8 @@ class Post extends User
                             '<li>
                                 <i class="material-icons likePost" id="'.$post->post_id.'l" data-post-id="'.$post->post_id.'">favorite_border</i>
                                 <i class="material-icons unLikePost" id="'.$post->post_id.'u" data-post-id="'.$post->post_id.'">favorite</i>
-                                <span id="'.$post->post_id.'likew"></span></li>'.
-                            '<li><a href="post.php?post_open=1&id='.$post->post_id.'"><i class="material-icons">chat_bubble_outline</i></a></li>'.
+                                <span id="'.$post->post_id.'likew">Like</span></li>'.
+                            '<li><a href="post.php?post_open=1&id='.$post->post_id.'"><i class="material-icons">chat_bubble_outline</i><span> Comment</span></a></li>'.
                         '</ul>'.
                         '<button id="demo-menu-lower-right'.$post->post_id.'"'.
                         'class="mdl-button mdl-js-button mdl-button--icon">'.
@@ -119,9 +87,13 @@ class Post extends User
                             echo 
                             '<li class="mdl-menu__item deletePost" data-post-id="'.$post->post_id.'">Delete</li>';
                         }else{
-                            echo 
-                            '<li class="mdl-menu__item">Report</li>'.
-                            '<li class="mdl-menu__item"><a href="'.BASE_URL.'/post/'.$post->post_id.'">View Post</a></li>';
+                            $reported = $this->reportPostCheck($user_connected, $post->post_id);
+                            if($reported > 0){
+                                echo '<li class="mdl-menu__item" data-post-id="'.$post->post_id.'">Reported</li>';
+                            }else{
+                                echo '<li class="mdl-menu__item reportPostBtn" data-post-id="'.$post->post_id.'">Report</li>';   
+                            }
+                            echo '<li class="mdl-menu__item"><a href="'.BASE_URL.'/post/'.$post->post_id.'">View Post</a></li>';
                         }
                         echo '</ul>'.
                     '</div>';
@@ -149,7 +121,34 @@ class Post extends User
             'getLikesCount('.$post->post_id.');'.
             'isLiked('.$post->post_id.');'.
             'getComments('.$post->post_id.');'.
+            'lazyload();'.
             '</script>';
+        }
+
+    }
+
+
+
+    //Mostramos un post pura imagen
+    public function printPostImage($post_id, $user_connected){
+        //Datos del post
+        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_id = :post_id");
+        $stmt->bindParam(":post_id", $post_id , PDO::PARAM_STR);
+        $stmt->execute();
+
+        $postData = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach($postData as $post){
+
+            $user_id = $post->post_user;
+            $user = $this->userData($user_id); 
+
+                if(!empty($post->post_image)){
+                    echo'<a href="post.php?post_open=1&id='.$post->post_id.'">'.
+                        '<img class="lazyload animated fadeIn" src="assets/images/load.gif" data-src="'.$post->post_image.'">'.
+                        '</a>';
+                }
+                
         }
 
     }
@@ -164,11 +163,20 @@ class Post extends User
 
         $posts = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        foreach($posts as $post){
-            //Sacamos el id del post
-            $post_id = $post->post_id;
-            //Llamamos a la función para imprimir el post
-            $postPrint = $this->printPost($post_id);
+        if(empty($posts)){
+            echo '<div class="no-post">
+                    <img src="assets/images/picture.png" width="50px" style="width:50px !important;" alt="">
+                    <p>This user has not post yet</p>
+                 </div>';
+                
+        }else{
+            //Si el usuario tiene posts, entonces los mostramos
+            foreach($posts as $post){
+                //Sacamos el id del post
+                $post_id = $post->post_id;
+                //Llamamos a la función para imprimir el post
+                $postPrint = $this->printPostImage($post_id, $user_id);
+            }
         }
     }
 
@@ -275,6 +283,31 @@ class Post extends User
         }
  
         
+    }
+
+    //Reportar post
+    public function reportPost($post_id, $sender_report){
+        $stmt = $this->pdo->prepare("INSERT INTO report_post (post_id,sender_id) VALUES (:post_id,:sender_id)");
+        $stmt->bindParam(":post_id", $post_id, PDO::PARAM_STR);
+        $stmt->bindParam(":sender_id", $sender_report, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result =$stmt->rowCount();
+
+        echo $result;
+    }
+
+    //Verificar si el usuario ya reportó el post
+    public function reportPostCheck($user_connected, $post_id){
+        $stmt = $this->pdo->prepare("SELECT * FROM report_post WHERE sender_id = :sender_id AND post_id = :post_id");
+        $stmt->bindParam(":post_id", $post_id, PDO::PARAM_STR);
+        $stmt->bindParam(":sender_id", $user_connected, PDO::PARAM_STR);
+        $stmt->execute();
+
+        $result =$stmt->rowCount();
+
+        return $result;
+
     }
     
 }

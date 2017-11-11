@@ -1,7 +1,7 @@
 <div class="suggested-home">
-	<div class="home-section-title">
-		<h2>Suggested for you</h2>
-	
+	<div class="title">
+		<span>Suggested users</span>
+		<i class="material-icons">arrow_forward</i>
 	</div>
 	<ul>
 		<?php $getFromU->suggestedUsersHome($user_id); ?>

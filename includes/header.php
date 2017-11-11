@@ -21,11 +21,14 @@
     <script src="../u-17p/core/js/firebase.js"></script>
     <!-- jquery -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <!-- lazy load -->
+    <script src="https://cdn.jsdelivr.net/npm/lazyload@2.0.0-beta.2/lazyload.js"></script>
 
     <title>Ultra</title>
 
 </head>
 <body>
+
 
 <!-- fondo de acciones -->
 <div class="bg-action"></div>
@@ -42,48 +45,58 @@
     </div>
 </div>
 
-<header class="menu" id="menuUser" data-user-id="<?php echo $user->user_id ?>" data-user-screenName="<?php echo $user->screenName?>">
-    <div class="menu-left flex-a-center">
-        <div class="menu-logo">
-            <img src="assets/images/logo.png" alt="">
-        </div>
-        <div class="menu-search">
-            <input type="text" placeholder="Search" id="menu-search">
-            <i class="material-icons menu-search-input-icon">search</i>
-            <div class="menu-search-result-wrap">
-                <div class="menu-search-result">
-                    <ul class="menu-search-result-list">
-                        
-                    </ul>
+<header class="menu-top" id="menuUser" data-user-id="<?php echo $user->user_id; ?>">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                <div class="logo">
+                    <a href="home.php">
+                        <img src="assets/images/logo-black.png" alt="">
+                    </a>
                 </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-6 menu-top-middle">
+                <div class="menu-top-search">
+                    <input type="text" placeholder="Search" class="input-search">
+                    <i class="material-icons menu-search-input-icon">search</i>
+                    <div class="menu-search-result-wrap">
+                        <ul class="menu-top-result-list"></ul>
+                    </div>
+                    
+                </div>
+                <div class="menu-top-icons">
+                   <i class="material-icons">public</i>
+
+                   <i class="material-icons">notifications_none</i>
+                </div>
+                <div class="menu-top-actions">
+                        <div class="menu-top-avatar avatar <?php if(isset($page) && $page == 4){echo "profile-active";}?>" style="background: url(<?php echo $user->profileImage; ?>);"></div>
+
+                        <button id="menu-top-user"
+                                class="mdl-button mdl-js-button mdl-button--icon">
+                          <i class="material-icons">arrow_drop_down</i>
+                        </button>
+
+                        <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                            for="menu-top-user"">
+                          <a href="profile.php?username=<?php echo $user->username;?>">
+                            <li class="mdl-menu__item">My Profile</li>
+                          </a>
+                          <li class="mdl-menu__item">Change Profile Image</li>
+                          <a href="includes/logout.php">
+                            <li class="mdl-menu__item">Exit</li>
+                          </a>
+                        </ul>
+                </div>
+                    
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 menu-top-buttons">
+                <span class="btn btn-tw btn-tw-linear">Settings</span>
+                <span class="btn btn-tw btn-tw-linear bg-accent openNewPost">New post</span>
             </div>
         </div>
     </div>
-    <nav>
-        <ul>
-            <li <?php if(isset($page) && $page == 1){?> class="active" <?php } ?>><a  href="home.php"><i class="material-icons">home</i>Home</a></li>
-            <li><a href="explore.php"><i class="material-icons">public</i>Trending</a></li>
-            <li><a href="#"><i class="material-icons">notifications</i>Notifications<span id="total_notifications"></span></a></li>
-            <li class="menu-user">
-                <div class="menu-avatar avatar <?php if(isset($page) && $page == 4){echo "profile-active";}?>" style="background: url(<?php echo $user->profileImage; ?>);"></div>
-                <div class="btn-group">
-                    <span  class="btn-menu-user dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <?php echo strtok($user->screenName, " "); ?>
-                    </span>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item" type="button"><a href="profile.php?username=<?php echo $user->username; ?>">Profile</a></button>
-                        <button class="dropdown-item" type="button"><a href="change-image-profile.php">New Profile Image</a></button>
-                        <button class="dropdown-item" type="button"><a href="change-image-cover.php">New Cover Image</a></button>
-                        <button class="dropdown-item" type="button"><a href="settings.php">Settings</a></button>
-                        <button class="dropdown-item" type="button"><a href="includes/logout.php">Logout</a></button>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <button type="button" class="btn btn-primary openNewPost bg-accent">New Post</button>
-            </li>
-        </ul>
-    </nav>
+    
 </header>
 
 <?php include 'new-post.php';

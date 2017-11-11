@@ -1,7 +1,7 @@
 <?php 
     include '../init.php';
 
-    //Login
+     //Login
     if(isset($_POST['operacion']) && $_POST['operacion'] === 'login'){
         $email = $_POST['email'];
         $password = $_POST['password'];
@@ -23,7 +23,7 @@
             //el correo o la contraseña o ambos están vacíos
             echo 300;
         }
-    }
+      }
 
     //Registro
     if(isset($_POST['operacion']) && $_POST['operacion'] === 'register'){
@@ -273,6 +273,13 @@
         $hashtag_name = $_POST['hashtag_name'];
         $post_id = $_POST['post_id'];
         $getFromH->captionHashtag($hashtag_name, $post_id);
+    }
+
+    //Reportar post
+    if(isset($_POST['operacion']) && $_POST['operacion'] === "reportPost"){
+        $post_id = $_POST['post_id'];
+        $sender_report = $_POST['sender_report'];
+        $getFromP->reportPost($post_id, $sender_report);
     }
 
 ?>

@@ -13,7 +13,6 @@
             <div class="flex-a-center"> 
                 <i class="material-icons new-post-addPhoto"><i class="material-icons">photo_size_select_large</i></i>
                 <input type="hidden" id="post_image" role="uploadcare-uploader" name="content"
-                    data-crop="900x900 minimum"
                     data-images-only="true" />
                 <div class="image-recent">
                     <img src="" alt="" id="image">

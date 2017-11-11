@@ -187,7 +187,7 @@ function getNotifications(){
           
           if(total_notifications > 0){
             $(".menu-notifications-alert").css("display","flex")
-            $("#total_notifications").html(total_notifications);
+            $("#total_notifications").html();
           }
 
       });

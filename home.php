@@ -28,7 +28,7 @@
 
 <div class="container mt-main">
 	<div class="row">
-		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
+		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 animated fadeIn">
 			<!-- mini profile -->
 			<div class="mini-profile-container">
 				<?php include 'includes/mini_profile_inc.php'; ?>

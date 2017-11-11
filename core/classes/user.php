@@ -1,6 +1,7 @@
 <?php
 
-class User{
+class User 
+{
     protected $pdo;
 
     function __construct($pdo){
@@ -212,7 +213,30 @@ class User{
             //Sacamos los datos del usuario
             $userData = $this->userData($user_id);
 
-            echo '<li><a href="profile.php?username='.$userData->username.'"><div class="avatar" style="background:url('.$userData->profileImage.');"></div>'.$userData->screenName.'</a></li>';
+            echo'<li class="list-tw-item">
+                    <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
+                    <div class="list-tw-item-right">
+                        <div class="list-tw-item-top">
+                            <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                            <button id="menu-for'.$userData->user_id.'"
+                                    class="mdl-button mdl-js-button mdl-button--icon">
+                              <i class="material-icons">more_vert</i>
+                            </button>
+
+                            <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                                for="menu-for'.$userData->user_id.'">
+                              <li class="mdl-menu__item">Report</li>
+                            </ul>
+                        </div>'.
+                        $sender = $sender = $_SESSION['user_id'];
+                        $reciver = $userData->user_id;
+                        Follow::isFollowing($sender,$reciver);
+                        
+                        '<div class="list-btns">
+                            <span class="btn btn-tw btn-tw-linear">Following</span>
+                        </div>
+                    </div>
+                </li>';
 
         }
 
@@ -220,7 +244,7 @@ class User{
 
     //Trending users home 
     public function suggestedUsersHome($user_id){
-        $stmt = $this->pdo->prepare("SELECT reciver, COUNT(*) FROM follow WHERE NOT reciver = :reciver GROUP BY reciver ORDER BY COUNT(*) DESC");
+        $stmt = $this->pdo->prepare("SELECT reciver, COUNT(*) FROM follow WHERE NOT reciver = :reciver GROUP BY reciver ORDER BY COUNT(*) DESC LIMIT 9");
         $stmt->bindParam(":reciver", $user_id , PDO::PARAM_STR);
         $stmt->execute();
         $users = $stmt->fetchAll(PDO::FETCH_OBJ);

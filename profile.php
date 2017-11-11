@@ -29,12 +29,23 @@
 ?>
 
 <section>
+	<!--
+	<div class="profile-top">
+		<i class="material-icons">keyboard_backspace</i>
+		<span>Back</span>
+	</div>-->
 	<div class="profile" style="background:url(<?php $cover = $getFromP->getCoverProfile($user_id); echo $cover; ?>);">
 		<div class="profile-wrap">
 			<div class="profile-info">
 				<div class="profile-info-item flex-a-center">
 					<div class="profile-info-pp">
-						<div class="avatar" style="background:url(<?php echo $profileData->profileImage; ?>);"></div>
+						<div class="avatar" style="background:url(<?php echo $profileData->profileImage; ?>);">
+							<?php if($user_id == $reciver){ ?>
+							<div class="profile-image-update">
+								<i class="material-icons">file_upload</i>
+							</div>
+							<?php } ?>
+						</div>
 					</div>
 					<div class="profile-info-user">
 						<h2><?php echo $profileData->screenName; ?></h2>
@@ -42,7 +53,7 @@
 						<p class="profile-bio"><?php echo $profileData->bio; ?></p>
 					</div>
 				</div>
-
+				<!--
 				<div class="profile-info-item">
 					<div class="profile-numbers-user">
 						<span>Followers </span><?php $getFromF->followersCount($reciver) ?>
@@ -50,23 +61,78 @@
 						<span>Posts </span><?php $getFromP->postCount($reciver) ?>
 					</div>
 				</div>
+				-->
 
 				<?php if($user_id === $profileOwner){ ?>
-				<div class="profile-info-item profile-btn-action">
-					<a href="settings.php">
-					<button class="btn btn-primary btn-lg bg-accent">SETTINGS</button>
-					</a>
-				</div>
+			
 				<?php }else{ ?>
+				
 				<div class="profile-info-item profile-btn-action">
 					<?php $getFromF->isFollowing($sender,$reciver) ?>
 				</div>
+
 				<?php } ?>
 			</div>
 		</div>
 	</div>
-
 </section>
+
+<div class="profile-side">
+		<div class="profile-side-nav">
+			<ul>
+				<li <?php if(isset($_GET['postsO']) && $_GET['postsO'] == 1){ echo 'class="active"'; } ?>>
+					<span class="bold"><?php $getFromP->postCount($profileOwner) ?></span>
+					<span class="light">Posts</span>
+				</li>
+				<li <?php if(isset($_GET['followersO']) && $_GET['followersO'] == 1){ echo 'class="active"'; } ?>>
+					<span class="bold"><?php $getFromF->followersCount($profileOwner) ?></span>
+					<span class="light">Followers</span>
+				</li>
+				<li <?php if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){ echo 'class="active"'; } ?>>
+					<span class="bold"><?php $getFromF->followingsCount($profileOwner) ?></span>
+					<span class="light">Followings</span>
+				</li>
+			</ul>
+		</div>
+		
+		<?php if(isset($_GET['postsO']) && $_GET['postsO'] == 1){ ?>
+		<!-- Post profile -->
+		<div class="profile-content">
+			<div id="profile-posts">
+				<div class="posts-mosaic">
+					<?php $getFromP->posts($profileOwner); ?>
+				</div>
+			</div>
+		</div>
+		<!-- / -->
+		<?php } ?>
+		
+		<?php if(isset($_GET['followingsO']) && $_GET['followingsO'] == 1){ ?>
+		<!-- Followings list -->
+		<div class="profile-content">
+			<div id="profile-followings">
+				<h3>Followings list</h3>
+				<ul class="list-tw">
+					<?php $getFromF->getFollowingsList($user_id) ?>
+				</ul>
+			</div>
+		</div>
+		<!-- / -->
+		<?php } ?>
+		
+		<?php if(isset($_GET['followersO']) && $_GET['followersO'] == 1){ ?>
+		<!-- Followers list -->
+		<div class="profile-content">
+			<div id="profile-followers">
+				<h3>Followers list</h3>
+				<ul class="list-tw">
+					<?php $getFromF->getFollowersList($reciver) ?>
+				</ul>
+			</div>
+		</div>
+		<!-- / -->
+		<?php } ?>
+</div>
 
  
 <?php include BASE_URL.'/includes/footer.php'; ?>
