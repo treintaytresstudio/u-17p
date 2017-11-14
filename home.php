@@ -27,6 +27,7 @@
 ?>
 
 <div class="container mt-main">
+	
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 animated fadeIn">
 			<!-- mini profile -->
@@ -41,7 +42,11 @@
 		</div>
 		<!-- posts -->
 		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts feed-container">
+			<div class="tutorial-welcome-section animated bounce">
+				<span>This is your feed section, you will find your friends activity</span>
+			</div>
 			<?php include 'includes/feed_inc.php'; ?>
+
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
 			<!-- trends for you -->

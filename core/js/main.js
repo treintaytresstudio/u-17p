@@ -8,7 +8,7 @@ $("document").ready(function(){
 
     //Grid
     //INITIALIZE THE PLUGIN
-    //INITIALIZE THE PLUGIN
+
     $('#grid').grid({
         showFilterBar: false, //Show the navigation filter bar at the top 
         imagesToLoad: 21, //The number of images to load when you click the load more button
@@ -35,48 +35,6 @@ $("document").ready(function(){
         lightBoxStopPlayOnClose: false, //Do you want pause the auto play mode when you close the lightbox?
     });
 
-    //Seguir usuario
-    $("#followBtn").on("click", function(){
-        var sender = $(this).data('sender');
-        var reciver = $(this).data('reciver');
-
-        $.ajax({
-            url:ajaxPhp,
-            type: 'POST',
-            data: {operacion: 'followUser', sender: sender, reciver: reciver},
-            beforeSend: function(){
-              //
-            },
-            complete: function(data){
-                $("#followBtn").hide();
-                $("#unFollowBtn").show();  
-
-                followerNot(sender,reciver);
-            }
-          });
-
-    });
-
-    //Dejar de seguir usuario
-    $("#unFollowBtn").on("click", function(){
-        var sender = $(this).data('sender');
-        var reciver = $(this).data('reciver');
-
-        $.ajax({
-            url:ajaxPhp,
-            type: 'POST',
-            data: {operacion: 'unFollowUser', sender: sender, reciver: reciver},
-            beforeSend: function(){
-              //
-            },
-            complete: function(res){
-                $("#unFollowBtn").hide();
-                $("#followBtn").show();         
-            }
-          });
-
-    });
-
     //Seguir hashtag
     $("#followHashtagBtn").on("click", function(){
         var user_id = $(this).data('user-id');
@@ -90,9 +48,9 @@ $("document").ready(function(){
               //
             },
             complete: function(res){
-                //$("#followHashtagBtn").hide();
-                //$("#unFollowHashtagBtn").show();
-                location.reload();
+                $("#followHashtagBtn").hide();
+                $("#unFollowHashtagBtn").show();
+                //location.reload();
 
             }
           });
@@ -149,9 +107,9 @@ $("document").ready(function(){
               //
             },
             complete: function(res){
-                //$("#unFollowHashtagBtn").hide();
-                //$("#followHashtagBtn").show();
-                location.reload();
+                $("#unFollowHashtagBtn").hide();
+                $("#followHashtagBtn").show();
+                //location.reload();
             }
           });
     });
@@ -200,6 +158,15 @@ $("document").ready(function(){
         $.post(ajaxPhp, {searchExplore:searchExplore},function(data){
             $("#explore-search-data").html(data);
         })
+    });
+
+    //Cargar nueva foto de perfil
+    $('#profileImage').change(function(){
+        var imagen = $("#profileImage").val();
+        if(imagen != ''){
+            alert("hello");
+        }
+        
     });
 
     
@@ -426,6 +393,51 @@ $("document").ready(function(){
 
 //Delegation event "Para manejar clicks después de cargar con Ajax"
 
+//Seguir usuario
+$(document).on("click", '.followBtn', function(){
+    var sender = $(this).data('sender');
+    var reciver = $(this).data('reciver');
+    var ajaxPhp = '../u-17p/core/ajax/ajax.php';
+
+    $.ajax({
+        url:ajaxPhp,
+        type: 'POST',
+        data: {operacion: 'followUser', sender: sender, reciver: reciver},
+        beforeSend: function(){
+
+        },
+        complete: function(data){
+
+            $("#fB"+reciver).hide();
+            $("#unFB"+reciver).show();  
+
+            followerNot(sender,reciver);
+        }
+      });
+
+});
+
+//Dejar de seguir usuario
+$(document).on("click", ".unFollowBtn" ,function(){
+    var sender = $(this).data('sender');
+    var reciver = $(this).data('reciver');
+    var ajaxPhp = '../u-17p/core/ajax/ajax.php';
+
+    $.ajax({
+        url:ajaxPhp,
+        type: 'POST',
+        data: {operacion: 'unFollowUser', sender: sender, reciver: reciver},
+        beforeSend: function(){
+          //
+        },
+        complete: function(res){
+            $("#unFB"+reciver).hide();
+            $("#fB"+reciver).show();         
+        }
+      });
+
+});
+
 //Like post
 $(document).on('click', '.likePost', function(){
     var post_id = $(this).data('post-id');
@@ -545,14 +557,4 @@ $(document).on('click', '.confirmDeletePost', function(){
 
 //JAVASCRIPT
 
-//UPLOAD CARE INFO
-UPLOADCARE_LOCALE = "en";
-UPLOADCARE_TABS = "file facebook instagram";
-UPLOADCARE_PUBLIC_KEY = "16e381e4b3ec66d54756";
 
-//Mostrar imagen subida
-var image = document.getElementById('image');
-var widget = uploadcare.Widget('[role=uploadcare-uploader]');
-widget.onUploadComplete(function (fileInfo) {
-  image.src = fileInfo.cdnUrl;
-});

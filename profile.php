@@ -15,6 +15,7 @@
 		
 		//Sabemos quien está logueado
 		$user_id = $_SESSION['user_id'];
+		$user_connected = $_SESSION['user_id'];
 		$user = $getFromU->userData($user_id);
 		$sender = $_SESSION['user_id'];
 
@@ -40,13 +41,15 @@
 			<div class="profile-info">
 				<div class="profile-info-item flex-a-center">
 					<div class="profile-info-pp">
-						<div class="avatar" style="background:url(<?php echo $profileData->profileImage; ?>);">
-							<?php if($user_id == $reciver){ ?>
-							<div class="profile-image-update">
-								<i class="material-icons">file_upload</i>
+						<a href="change-image-profile.php">
+							<div class="avatar" style="background:url(<?php echo $profileData->profileImage; ?>);">
+								<?php if($user_id == $reciver){ ?>
+								<div class="profile-image-update">
+									<i class="material-icons">file_upload</i>
+								</div>
+								<?php } ?>
 							</div>
-							<?php } ?>
-						</div>
+						</a>
 					</div>
 					<div class="profile-info-user">
 						<h2><?php echo $profileData->screenName; ?></h2>
@@ -64,7 +67,7 @@
 				</div>
 				-->
 
-				<?php if($user_id === $profileOwner){ ?>
+				<?php if($user_connected === $profileOwner){ ?>
 			
 				<?php }else{ ?>
 				

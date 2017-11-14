@@ -39,12 +39,12 @@ class Follow extends User{
         $count = $stmt->rowCount();
         if($count > 0){
             echo 
-            '<button class="btn btn-tw btn-tw-linear" id="unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'">FOLLOWING</button>'.
-            '<button class="btn btn-tw btn-tw-linear bg-accent" id="followBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;">FOLLOW</button>';
+            '<span class="btn btn-tw btn-tw-linear unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" id="unFB'.$reciver.'">FOLLOWING</span>'.
+            '<span class="btn btn-tw btn-tw-linear bg-accent followBtn"  data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;" id="fB'.$reciver.'">FOLLOW</span>';
         }else{
             echo 
-            '<button class="btn btn-tw btn-tw-linear bg-accent" id="followBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'">FOLLOW</button>'.
-            '<button class="btn btn-tw btn-tw-linear" id="unFollowBtn" data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;">FOLLOWING</button>';
+            '<span class="btn btn-tw btn-tw-linear bg-accent followBtn"  data-reciver="'.$reciver.'" data-sender="'.$sender.'" id="fB'.$reciver.'">FOLLOW</span>'.
+            '<span class="btn btn-tw btn-tw-linear unFollowBtn"  data-reciver="'.$reciver.'" data-sender="'.$sender.'" style="display:none;" id="unFB'.$reciver.'">FOLLOWING</span>';
         }
 
     }

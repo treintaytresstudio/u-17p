@@ -84,7 +84,9 @@
                           <a href="profile.php?username=<?php echo $user->username;?>">
                             <li class="mdl-menu__item">My Profile</li>
                           </a>
-                          <li class="mdl-menu__item">Change Profile Image</li>
+                          <a href="change-image-profile.php">
+                            <li class="mdl-menu__item">Change Profile Image</li>
+                          </a>
                           <a href="includes/logout.php">
                             <li class="mdl-menu__item">Exit</li>
                           </a>
@@ -95,11 +97,21 @@
             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 menu-top-buttons">
                 <a href="settings.php" class="btn btn-tw btn-tw-linear">Settings</a>
                 <span class="btn btn-tw btn-tw-linear bg-accent openNewPost">New post</span>
+                <div class="tutorial-welcome-post animated bounce">
+                    <span>Here you can create your first post</span>
+                </div>
             </div>
         </div>
     </div>
     
 </header>
 
-<?php include 'new-post.php';
+<?php 
+if(isset($page) And $page =='choose-image-profile'){
+    
+}else{
+   include 'new-post.php'; 
+}
+
+?>
 

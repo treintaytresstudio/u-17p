@@ -27,8 +27,10 @@ class Hashtag extends Post
 
     //Crea el hashtag dentro de la base de datos
     public function createHashtag($hashtag_name, $post_id){
-        $stmt = $this->pdo->prepare("INSERT INTO hashtags (hashtag_name) VALUES (:hashtag_name)");
+        $t_search = 'hashtag';
+        $stmt = $this->pdo->prepare("INSERT INTO hashtags (hashtag_name, t_search) VALUES (:hashtag_name,:t_search)");
         $stmt->bindParam(":hashtag_name", $hashtag_name, PDO::PARAM_STR);
+        $stmt->bindParam(":t_search", $t_search, PDO::PARAM_STR);
         $stmt->execute();
 
         //Llamamos a la función para insertar el post en el hashtag

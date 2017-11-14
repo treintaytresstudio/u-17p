@@ -25,16 +25,13 @@
 	</div>
 	<nav>
 		<ul>
-			<li><a href="index.php">HOME</a></li>
 			<li><a href="#">ABOUT</a></li>
 			<li><a href="#">PRIVACY</a></li>
 			<li><a href="#">BUSINESS</a></li>
 			<li><a href="#">CONTACT</a></li>
 		</ul>
 	</nav>
-	<div class="btn bg-mainDark">
-		<a href="index.php">LOGIN</a>
-	</div>
+		<a href="index.php" class="btn bg-mainDark">LOGIN</a>
 </header><!-- /login header -->
 
 <!-- login -->

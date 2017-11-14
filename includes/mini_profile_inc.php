@@ -20,9 +20,10 @@
 	</div>
 	<div class="mini-profile-stats">
 		<ul>
-			<a href="profile.php?username=<?php echo $user->username; ?>&followersO=1">
+			<a href="profile.php?username=<?php echo $user->username; ?>&followersO=1" >
 				<li><span class="number"><?php $getFromF->followersCount($reciver) ?></span> <span class="s-type">Followers</span></li>
 			</a>
+	
 			<a href="profile.php?username=<?php echo $user->username; ?>&followingsO=1">
 				<li><span class="number"><?php $getFromF->followingsCount($reciver) ?></span> <span class="s-type">Followings</span></li>
 			</a>
