@@ -122,10 +122,7 @@ $("document").ready(function(){
         $(".new-post-wrap").css("display", "flex");
     });
 
-    //Cerrar new post
-    $(".new-post-close").on("click" , function(){
-        $(".new-post-wrap").css("display", "none");
-    });
+    
 
     //Buscar usuario
     $(".input-search").keyup(function(){
@@ -159,16 +156,6 @@ $("document").ready(function(){
             $("#explore-search-data").html(data);
         })
     });
-
-    //Cargar nueva foto de perfil
-    $('#profileImage').change(function(){
-        var imagen = $("#profileImage").val();
-        if(imagen != ''){
-            alert("hello");
-        }
-        
-    });
-
     
 
     //Comentar en post
@@ -196,7 +183,7 @@ $("document").ready(function(){
             },
             complete: function(res){
                 $("#changeImagePhoto").val('Actualizada');
-                location.reload();
+                window.location.href = "home.php";
             }
           });
     });
@@ -271,8 +258,8 @@ $("document").ready(function(){
     });
 
     //Crear Post
-    $("#newPostBtn").click(function(){
-        
+    $(document).on("click",'#newPostBtn',function(){
+        var ajaxPhp = '../u-17p/core/ajax/ajax.php';
         var user_id = $(".new-post").attr("data-user");
         var post_caption= $("#newPostInput").val();
         var post_image = $("#post_image").val(); 
@@ -324,7 +311,9 @@ $("document").ready(function(){
                 //Llamamos a la función encargada de verificar si existen # en el caption del post
                 hashtagPost(post_caption, post_id);
 
-                
+
+                $(".new-post-container").load('includes/new-post.php');
+
 
                 //Mostramos notificación
                 setTimeout(function(){
@@ -346,6 +335,9 @@ $("document").ready(function(){
 
           });
     });
+
+
+    
 
     ////////////----------Funciones----------////////////
     
@@ -446,6 +438,11 @@ $(document).on('click', '.likePost', function(){
     likePost(post_id);
 });
 
+//Cerrar new post
+$(document).on("click", '.new-post-close', function(){
+    $(".new-post-wrap").css("display", "none");
+});
+
 //Unlike post
 $(document).on('click', '.unLikePost', function(){
     var post_id = $(this).data('post-id');
@@ -464,6 +461,11 @@ $(document).on('click', '.cancellDeletePost', function(){
 $(document).on('click', '.deletePost', function(){
     var post_id = $(this).data('post-id');
     deletePostConfirm(post_id);
+});
+
+
+$(document).on('click', '#tutorial-welcome-post-close', function(){
+    $("#tutorial-welcome-post").hide();
 });
 
 //Followers profile open

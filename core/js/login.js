@@ -194,7 +194,7 @@ $("document").ready(function(){
 	    	}
 	    	
 	    	if(data == 1){
-	    		window.location.href = "home.php";
+	    		window.location.href = "change-image-profile.php?new_user=1";
 	    	}
 
 	    	

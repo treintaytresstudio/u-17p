@@ -57,27 +57,31 @@ class Follow extends User{
 
         $users = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        foreach($users as $user){
-            //Sacamos el id del usuario
-            $user_id = $user->reciver;
-            //Sacamos los datos del usuario
-            $userData = $this->userData($user_id);
+        if(empty($users)){
+            echo "<p>List empty</p>";
+        }else{
+            foreach($users as $user){
+                //Sacamos el id del usuario
+                $user_id = $user->reciver;
+                //Sacamos los datos del usuario
+                $userData = $this->userData($user_id);
 
-            $sender = $_SESSION['user_id'];
-            $reciver = $userData->user_id;
+                $sender = $_SESSION['user_id'];
+                $reciver = $userData->user_id;
 
-            echo'<li class="list-tw-item">
-                    <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
-                    <div class="list-tw-item-right">
-                        <div class="list-tw-item-top">
-                            <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                echo'<li class="list-tw-item">
+                        <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
+                        <div class="list-tw-item-right">
+                            <div class="list-tw-item-top">
+                                <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                            </div>
+                            <div class="list-btns">';
+                                $this->isFollowing($sender,$reciver);
+                            '</div>                   
                         </div>
-                        <div class="list-btns">';
-                            $this->isFollowing($sender,$reciver);
-                        '</div>                   
-                    </div>
-                </li>';
+                    </li>';
 
+            }
         }
 
     }
@@ -90,27 +94,31 @@ class Follow extends User{
 
         $users = $stmt->fetchAll(PDO::FETCH_OBJ);
 
-        foreach($users as $user){
-            //Sacamos el id del usuario
-            $user_id = $user->sender;
-            //Sacamos los datos del usuario
-            $userData = $this->userData($user_id);
+        if(empty($users)){
+            echo "<p>List empty</p>";
+        }else{
+            foreach($users as $user){
+                //Sacamos el id del usuario
+                $user_id = $user->sender;
+                //Sacamos los datos del usuario
+                $userData = $this->userData($user_id);
 
-            $sender = $_SESSION['user_id'];
-            $reciver = $userData->user_id;
+                $sender = $_SESSION['user_id'];
+                $reciver = $userData->user_id;
 
-            echo'<li class="list-tw-item">
-                    <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
-                    <div class="list-tw-item-right">
-                        <div class="list-tw-item-top">
-                            <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                echo'<li class="list-tw-item">
+                        <span class="avatar"style="background:url('.$userData->profileImage.');"></span>
+                        <div class="list-tw-item-right">
+                            <div class="list-tw-item-top">
+                                <a href="profile.php?username='.$userData->username.'"><span class="name-list">'.$userData->screenName.'</span></a>
+                            </div>
+                            <div class="list-btns">';
+                               $this->isFollowing($sender,$reciver);
+                            '</div>                   
                         </div>
-                        <div class="list-btns">';
-                           $this->isFollowing($sender,$reciver);
-                        '</div>                   
-                    </div>
-                </li>';
+                    </li>';
 
+            }
         }
 
     }

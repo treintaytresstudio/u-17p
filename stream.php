@@ -1,6 +1,4 @@
 <?php
-	//Pagina activa en menu
-	$page = 1;
 	//Comentarios en los posts
 	$post_open = 0;
 
@@ -8,6 +6,11 @@
 
     //Usuario conectado
     $user_id = $_SESSION['user_id'];
+
+    //Usuario nuevo
+    if(isset($_GET['new_user'])){
+    	$new_user = $_GET['new_user'];
+    }
 
     //Mini profile
 	$user = $getFromU->userData($user_id);
@@ -47,8 +50,14 @@
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">
 			<!-- trends for you -->
-			<div class="trends-for-you-container">
+			<div class="trends-for-you-container" style="position: relative;">
 				<?php include 'includes/trends_home_inc.php'; ?>
+				<?php if(isset($new_user) && $new_user == 1){ ?>
+				
+				<!--<div class="tutorial-welcome-section animated bounce">
+					<span>This is your feed section, you will find your friends activity</span>
+				</div>-->
+				<?php } ?>
 			</div><!-- /trends for you -->
 
 			<!-- suggested users -->

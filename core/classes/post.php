@@ -9,6 +9,7 @@ class Post extends User
 
     //Creamos un nuevo post
     public function newPost($user_id,$post_caption,$post_image){
+
         $time = date('Y-m-d H:i:s');
 
         $stmt = $this->pdo->prepare("INSERT INTO posts (post_user, post_caption, post_image, post_time) VALUES (:post_user,:post_caption,:post_image, :post_time)");
@@ -18,10 +19,9 @@ class Post extends User
         $stmt->bindParam(":post_time", $time,PDO::PARAM_STR);
         $stmt->execute();
 
-        //$error = $stmt->errorInfo();
-        //var_dump($error);
         $post_id = $this->pdo->lastInsertId();
         echo $post_id;
+
     }
 
 
@@ -251,8 +251,15 @@ class Post extends User
         $stmt->bindParam(":post_id", $post_id, PDO::PARAM_STR);
         $stmt->execute();
         echo $post_id;
-        //$error = $stmt->errorInfo();
-        //var_dump($error);
+
+        //Borrar post de hashtag
+        $this->deletePostFromHashtag($post_id);
+    }
+
+    public function deletePostFromHashtag($post_id){
+        $stmt = $this->pdo->prepare("DELETE FROM hashtag_post WHERE post_id = :post_id");
+        $stmt->bindParam(":post_id", $post_id, PDO::PARAM_STR);
+        $stmt->execute();
     }
 
     //Retorna el número de post del usuario
@@ -264,6 +271,16 @@ class Post extends User
         $posts = $stmt->rowCount();
 
         echo $posts;
+    }
+    public function postCountTut($reciver){
+        $stmt = $this->pdo->prepare("SELECT * FROM posts WHERE post_user = :post_user");
+        $stmt->bindParam(":post_user", $reciver , PDO::PARAM_STR);
+        $stmt->execute();
+
+        $posts = $stmt->rowCount();
+
+        return $posts;
+
     }
 
     //Mostramos el tiempo en 
@@ -331,8 +348,8 @@ class Post extends User
 
         //Si no hay actividad entonces mostramos mensaje de bienveida
         if(empty($posts)){
-            echo '<img src="assets/images/welcome.jpg">'.
-                '<div class="no-post-message"><h4>You dont have any activity, please create your first post.</h4></div>';
+            echo 
+                '<div class="no-post-message"><img src="assets/images/welcome.jpg"><h4>You dont have any activity, please create your first post. <br> Or visit our <a href="stream.php">stream</a> to see activity.</h4></div>';
         }
         //Mostramos los posts correspondientes
         else{

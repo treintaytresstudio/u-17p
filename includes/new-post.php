@@ -1,3 +1,18 @@
+<?php
+
+    //Archivo principal de clases
+    include_once $_SERVER['DOCUMENT_ROOT'].'/u-17p/core/init.php';
+
+    //Usuario conectado
+    $user_id = $_SESSION['user_id'];
+
+    //Mini profile
+    $user = $getFromU->userData($user_id);
+  
+    
+
+    
+?>
 <div class="new-post-wrap">
     <div class="new-post" data-user="<?php echo $user->user_id; ?>">
         <div class="new-post-header">
@@ -22,19 +37,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    
-    //UPLOAD CARE INFO
-    UPLOADCARE_LOCALE = "en";
-    UPLOADCARE_TABS = "file facebook instagram";
-    UPLOADCARE_PUBLIC_KEY = "16e381e4b3ec66d54756";
-
-    //Mostrar imagen subida
-    var image = document.getElementById('image');
-    var widget = uploadcare.Widget('[role=uploadcare-uploader]');
-    widget.onUploadComplete(function (fileInfo) {
-      image.src = fileInfo.cdnUrl;
-
-    });
-</script>

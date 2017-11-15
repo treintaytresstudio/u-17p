@@ -22,5 +22,53 @@
     lazyload();
 </script>
 
+<?php 
+if(isset($page) && $page === 'choose-image-profile'){
+?>
+<script>
+	//UPLOAD CARE INFO
+	UPLOADCARE_LOCALE = "en";
+	UPLOADCARE_TABS = "file facebook instagram";
+	UPLOADCARE_PUBLIC_KEY = "16e381e4b3ec66d54756";
+
+	//Mostrar imagen subida
+	var image_new = document.getElementById('image_new');
+	var widget_cpi = uploadcare.Widget('[role=uploadcare-uploader2]');
+	var button = document.getElementById('changeImagePhoto');
+	var button_skip = document.getElementById('slikpChangeImagePhoto');
+	var tutorial = document.getElementById('tutorial-photo');
+	var help_text = document.getElementById('text-help-change-image');
+
+	widget_cpi.onUploadComplete(function (fileInfo) {
+
+		  image_new.setAttribute("style", "background:url("+fileInfo.cdnUrl+");");
+		  button.setAttribute("style","display:block; margin:0 auto;");
+		  button_skip.setAttribute("style","display:none;");
+		  tutorial.setAttribute("style","display:none;");
+		  help_text.setAttribute("style","display:none;");
+
+
+	});
+</script>
+<?php }else{ ?>
+
+<script>
+	//UPLOAD CARE INFO
+	UPLOADCARE_LOCALE = "en";
+	UPLOADCARE_TABS = "file facebook instagram";
+	UPLOADCARE_PUBLIC_KEY = "16e381e4b3ec66d54756";
+
+	//Mostrar imagen subida
+	var image = document.getElementById('image');
+	var widget = uploadcare.Widget('[role=uploadcare-uploader]');
+	widget.onUploadComplete(function (fileInfo) {
+	  image.src = fileInfo.cdnUrl;
+	});
+
+	var widget = uploadcare.initialize();
+
+</script>
+<?php } ?>
+
 </body>
 </html>

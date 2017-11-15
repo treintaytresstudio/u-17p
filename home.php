@@ -1,9 +1,14 @@
 <?php
 	//Pagina activa en menu
-	$page = 1;
+	$page = 0;
 	//Comentarios en los posts
 	$post_open = 0;
+	//Usuario nuevo
+	if(isset($_GET['new_user'])){
+		$new_user = $_GET['new_user'];
+	}
 
+	//Archivo principal de clases
     include_once 'core/init.php';
 
     //Usuario conectado
@@ -17,6 +22,7 @@
 	$profileOwner = $profileData->user_id;
 	$reciver = $profileOwner;
 	
+	//Si el usuario no está logueado, lo regresamos al login
 	if($getFromU->loggedIn() === true){
 		include BASE_URL.'/includes/header.php';
 	}else{
@@ -42,10 +48,8 @@
 		</div>
 		<!-- posts -->
 		<div class="col-sm-12 col-md-12 col-lg-6 col-xl-6 posts feed-container">
-			<div class="tutorial-welcome-section animated bounce">
-				<span>This is your feed section, you will find your friends activity</span>
-			</div>
 			<?php include 'includes/feed_inc.php'; ?>
+
 
 		</div> <!-- /posts -->
 		<div class="col-sm-12 col-md-12 col-lg-3 col-xl-3">

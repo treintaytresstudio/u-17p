@@ -10,4 +10,8 @@ $("document").ready(function(){
 	setTimeout(function(){
 	  $('.suggested-home').css("display", "block").addClass('animated fadeIn');
 	}, 800);
+
+	setTimeout(function(){
+	  $('.tutorial-welcome-post').removeClass('animated bounce').hide();
+	}, 4000);
 });

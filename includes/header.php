@@ -97,21 +97,22 @@
             <div class="col-sm-12 col-md-12 col-lg-3 col-xl-3 menu-top-buttons">
                 <a href="settings.php" class="btn btn-tw btn-tw-linear">Settings</a>
                 <span class="btn btn-tw btn-tw-linear bg-accent openNewPost">New post</span>
+                <?php
+                 $postCount = $getFromP->postCountTut($user_id);
+                 if($postCount == 0){ 
+                ?>
                 <div class="tutorial-welcome-post animated bounce">
                     <span>Here you can create your first post</span>
+                    <span id="tutorial-welcome-post-close" style="display: block; margin-top: 5px; width: 80px; color:#fff; font-weight: bold; font-size: 16px; cursor: pointer;">Close</span>
                 </div>
+                <?php } ?>
             </div>
         </div>
     </div>
     
 </header>
 
-<?php 
-if(isset($page) And $page =='choose-image-profile'){
-    
-}else{
-   include 'new-post.php'; 
-}
-
-?>
+<div class="new-post-container">
+    <?php include 'new-post.php';  ?> 
+</div>
 
